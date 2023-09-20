@@ -1,9 +1,18 @@
+server:
+  port: 8082
+
 spring:
   application:
     name: api-gateway
-
-server:
-  port: 8082
+  cloud:
+    gateway:
+      routes:
+      - id: bank-service
+        uri: lb://bank-service
+        predicates:
+          - Path=/bank-service/**   #matches incoming requests on localhost:8082/bank-service/api
+        filters:
+          - StripPrefix=1   #removes one element on the beginning of the url, which in this case is only "banking-service" from url when sending request downstream. StripPrefix=2 would remove /bank-service/api/ from url when sending downstream.
 
 eureka:
   client:

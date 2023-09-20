@@ -11,6 +11,7 @@ java {
     sourceCompatibility = JavaVersion.VERSION_17
 }
 
+
 repositories {
     mavenCentral()
 }
@@ -19,8 +20,9 @@ extra["springCloudVersion"] = "2022.0.4"
 
 dependencies {
     implementation("org.springframework.boot:spring-boot-starter-actuator")
-    implementation ("org.springframework.cloud:spring-cloud-starter-gateway")
+    implementation("org.springframework.boot:spring-boot-starter-web")
     implementation("org.springframework.cloud:spring-cloud-starter-netflix-eureka-client")
+    //implementation ("org.springframework.boot:spring-boot-starter-oauth2-resource-server")
     testImplementation("org.springframework.boot:spring-boot-starter-test")
 }
 
