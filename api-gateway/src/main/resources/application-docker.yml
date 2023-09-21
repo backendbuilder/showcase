@@ -1,0 +1,49 @@
+security:
+  config:
+    keycloak:
+      url: http://keycloak:8080
+      realm: showcase-realm
+server:
+  port: 8082
+
+spring:
+  application:
+    name: api-gateway
+  security:
+    oauth2:
+      client:
+        provider:
+          keycloak:
+            issuer-uri: ${security.config.keycloak.url}/realms/showcase-realm
+        registration:
+          api-gateway:
+            provider: keycloak
+            client-id: showcase-client-1
+            client-secret: Xt4yPIfHzvsYCerA8QiurQVxXGfAPB0p
+            authorization-grant-type: authorization_code
+            redirect-uri: ${security.config.keycloak.url}/login/oauth2/code/keycloak
+            scope: openid
+      resourceserver:
+        jwt:
+          jwk-set-uri: ${security.config.keycloak.url}/realms/${security.config.keycloak.realm}/protocol/openid-connect/certs
+  cloud:
+    gateway:
+      routes:
+        - id: bank-service
+          uri: lb://bank-service
+          predicates:
+            - Path=/bank-service/**   #matches incoming requests on localhost:8082/bank-service/api
+          filters:
+            - StripPrefix=1   #removes one element on the beginning of the url, which in this case is only "banking-service" from url when sending request downstream. StripPrefix=2 would remove /bank-service/api/ from url when sending downstream.
+
+eureka:
+  client:
+    service-url:
+      defaultZone: http://service-registry:8081/eureka
+
+#Actuator endpoints
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"

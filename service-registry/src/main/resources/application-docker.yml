@@ -1,0 +1,9 @@
+server:
+  port: 8081
+
+eureka:
+  client:
+    service-url:
+      defaultZone: http://service-registry:8081/eureka
+    fetch-registry: false # Otherwise it will try to fetch details about all the registered services from itself
+    register-with-eureka: false #otherwise eureka will try to register this server gradl a client to itself by default config

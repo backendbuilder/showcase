@@ -1,0 +1,21 @@
+spring:
+  application:
+    name: bank-service
+server:
+  port: 8084
+
+eureka:
+  client:
+    service-url:
+      defaultZone: http://service-registry:8081/eureka
+
+info:
+  app:
+    name: ${spring.application.name}
+
+#Actuator endpoints
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
