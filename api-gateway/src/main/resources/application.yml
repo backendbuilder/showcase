@@ -3,7 +3,6 @@ security:
     keycloak:
       url: http://localhost:8083
       realm: showcase-realm
-
 server:
   port: 8082
 
@@ -15,19 +14,14 @@ spring:
       client:
         provider:
           keycloak:
-            token-uri: ${security.config.keycloak.url}/realms/${security.config.keycloak.realm}/protocol/openid-connect/token
-            authorization-uri: ${security.config.keycloak.url}/realms/${security.config.keycloak.realm}/protocol/openid-connect/auth
-            user-name-attribute: preferred_username
-            user-info-uri: ${security.config.keycloak.url}/realms/${security.config.keycloak.realm}/protocol/openid-connect/userinfo
-            jwk-set-uri: ${security.config.keycloak.url}/realms/${security.config.keycloak.realm}/protocol/openid-connect/certs
-            user-info-authentication-method: header
+            issuer-uri: ${security.config.keycloak.url}/realms/showcase-realm
         registration:
           api-gateway:
             provider: keycloak
             client-id: showcase-client-1
             client-secret: Xt4yPIfHzvsYCerA8QiurQVxXGfAPB0p
             authorization-grant-type: authorization_code
-            redirect-uri: http://localhost:8080/login/oauth2/code/keycloak
+            redirect-uri: ${security.config.keycloak.url}/login/oauth2/code/keycloak
             scope: openid
       resourceserver:
         jwt:
@@ -46,3 +40,10 @@ eureka:
   client:
     service-url:
       defaultZone: http://localhost:8081/eureka
+
+#Actuator endpoints
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
