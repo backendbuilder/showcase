@@ -9,6 +9,16 @@ server:
 spring:
   application:
     name: api-gateway
+  cloud:
+    gateway:
+      routes:
+        - id: bank-service
+          uri: lb://bank-service
+          predicates:
+            - Path=/bank-service/**   #matches incoming requests on localhost:8082/bank-service/api
+          filters:
+            - StripPrefix=1   #removes one element on the beginning of the url, which in this case is only "banking-service" from url when sending request downstream. StripPrefix=2 would remove /bank-service/api/ from url when sending downstream.
+            - TokenRelay= #used to forward token in request to downstream resource server (not sure why no value is necessary)
   security:
     oauth2:
       client:
@@ -21,20 +31,11 @@ spring:
             client-id: showcase-client-1
             client-secret: Xt4yPIfHzvsYCerA8QiurQVxXGfAPB0p
             authorization-grant-type: authorization_code
-            redirect-uri: ${security.config.keycloak.url}/login/oauth2/code/keycloak
+            redirect-uri: "http://localhost:8082/login/oauth2/code/{registrationId}"
             scope: openid
-      resourceserver:
-        jwt:
-          jwk-set-uri: ${security.config.keycloak.url}/realms/${security.config.keycloak.realm}/protocol/openid-connect/certs
-  cloud:
-    gateway:
-      routes:
-        - id: bank-service
-          uri: lb://bank-service
-          predicates:
-            - Path=/bank-service/**   #matches incoming requests on localhost:8082/bank-service/api
-          filters:
-            - StripPrefix=1   #removes one element on the beginning of the url, which in this case is only "banking-service" from url when sending request downstream. StripPrefix=2 would remove /bank-service/api/ from url when sending downstream.
+   #   resourceserver:
+    #    jwt:
+      #    jwk-set-uri: ${security.config.keycloak.url}/realms/${security.config.keycloak.realm}/protocol/openid-connect/certs
 
 eureka:
   client:
