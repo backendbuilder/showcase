@@ -1,8 +1,4 @@
-security:
-  config:
-    keycloak:
-      url: http://localhost:8083
-      realm: showcase-realm
+
 server:
   port: 8082
 
@@ -18,18 +14,22 @@ spring:
             - Path=/bank-service/**   #matches incoming requests on localhost:8082/bank-service/api
           filters:
             - StripPrefix=1   #removes one element on the beginning of the url, which in this case is only "banking-service" from url when sending request downstream. StripPrefix=2 would remove /bank-service/api/ from url when sending downstream.
-            - TokenRelay= #used to forward token in request to downstream resource server (not sure why no value is necessary)
+            # - TokenRelay= #used to forward token in request to downstream resource server (not sure why no value is necessary)
+
   security:
     oauth2:
+      resourceserver:
+        jwt:
+          issuer-uri: http://localhost:8080/realms/showcase-realm-2
       client:
         provider:
           keycloak:
-            issuer-uri: ${security.config.keycloak.url}/realms/showcase-realm
+            issuer-uri: http://localhost:8080/realms/showcase-realm-2
         registration:
           api-gateway:
             provider: keycloak
-            client-id: showcase-client-1
-            client-secret: Xt4yPIfHzvsYCerA8QiurQVxXGfAPB0p
+            client-id: showcase-client-2
+            client-secret: RUdoTm2ozmG60qGQ9X8srXIJLubg4A6C
             authorization-grant-type: authorization_code
             redirect-uri: "http://localhost:8082/login/oauth2/code/{registrationId}"
             scope: openid
@@ -48,3 +48,6 @@ management:
     web:
       exposure:
         include: "*"
+logging:
+  level:
+    root: INFO

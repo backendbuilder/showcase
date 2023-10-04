@@ -1,4 +1,4 @@
-/*
+
 package com.showcase.configuration;
 
 import org.springframework.context.annotation.Bean;
@@ -15,12 +15,12 @@ public class SecurityConfig {
     @Bean
     public SecurityWebFilterChain securityFilterChain(ServerHttpSecurity http) {
         http.csrf(ServerHttpSecurity.CsrfSpec::disable);
-        http.cors(ServerHttpSecurity.CorsSpec::disable);
+        //http.cors(ServerHttpSecurity.CorsSpec::disable);
         http.authorizeExchange(authorize -> authorize
-                .pathMatchers("/actuator/**").permitAll()
+/*                .pathMatchers("/actuator/**").permitAll()
                 .pathMatchers("bank-service/actuator/**").permitAll()
                 .pathMatchers("/swagger-ui/**", "/v3/api-docs/**").permitAll()
-                .pathMatchers("/login/oath2/**").permitAll()
+                .pathMatchers("/login/oath2/**").permitAll()*/
                 .anyExchange().authenticated());
         http.oauth2ResourceServer(t-> t.jwt(Customizer.withDefaults()));
         http.oauth2Login(Customizer.withDefaults());
@@ -28,4 +28,4 @@ public class SecurityConfig {
         return http.build();
     }
 
-}*/
+}

@@ -11,7 +11,7 @@ services:
     depends_on:
       - keycloak_db
     ports:
-      - "8083:8080"
+      - "8080:8080"
 
   keycloak_db:
     container_name: keycloak_db
