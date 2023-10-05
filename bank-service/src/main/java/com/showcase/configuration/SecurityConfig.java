@@ -1,33 +1,31 @@
 package com.showcase.configuration;
 
-import org.springframework.beans.factory.annotation.Configurable;
 import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.convert.converter.Converter;
+import org.springframework.security.authentication.AbstractAuthenticationToken;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-import org.springframework.security.config.annotation.web.configurers.oauth2.server.resource.OAuth2ResourceServerConfigurer;
-import org.springframework.security.config.web.server.ServerHttpSecurity;
+import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
+import org.springframework.security.oauth2.jwt.Jwt;
+import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationConverter;
 import org.springframework.security.web.SecurityFilterChain;
 
 @EnableWebSecurity
 @Configuration
 public class SecurityConfig {
-    /**
-     * For the backend-resources, I indicate that all the endpoints are protected.
-     * To request any endpoint, the OAuth2 protocol is necessary, using the server configured and with the given scope.
-     * Thus, a JWT will be used to communicate between the backend-resources and backend-auth when backend-resources
-     * needs to validate the authentication of a request.
-     */
+
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+        http.csrf(AbstractHttpConfigurer::disable);
         http.authorizeHttpRequests((req) -> req
-                        .anyRequest().authenticated()
+                        .anyRequest().authenticated());
                 //.anyRequest().hasAnyAuthority("SCOPE_message.read")
-        );
-        http.oauth2ResourceServer((oauth2) -> oauth2.jwt(Customizer.withDefaults())
-        );
+        http.oauth2ResourceServer(t -> t.jwt(Customizer.withDefaults()));
+        //http.oauth2ResourceServer(t-> t.jwt(jwt -> jwt.jwtAuthenticationConverter(jwtAuthenticationConverter())));
+        //http.oauth2Login(Customizer.withDefaults());
+
         return http.build();
 
 

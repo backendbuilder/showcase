@@ -1,6 +1,11 @@
 spring:
   application:
     name: bank-service
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          issuer-uri: http://localhost:8080/realms/showcase-realm-2
 
 server:
   port: 8084
@@ -10,11 +15,6 @@ eureka:
     service-url:
       defaultZone: http://localhost:8081/eureka
 
-info:
-  app:
-    name: ${spring.application.name}
-
-#Actuator endpoints
 management:
   endpoints:
     web:

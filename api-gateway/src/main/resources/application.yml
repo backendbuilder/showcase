@@ -1,4 +1,3 @@
-
 server:
   port: 8082
 
@@ -7,20 +6,16 @@ spring:
     name: api-gateway
   cloud:
     gateway:
+      default-filters:
+        - TokenRelay=
       routes:
         - id: bank-service
           uri: lb://bank-service
           predicates:
             - Path=/bank-service/**   #matches incoming requests on localhost:8082/bank-service/api
-          filters:
-            - StripPrefix=1   #removes one element on the beginning of the url, which in this case is only "banking-service" from url when sending request downstream. StripPrefix=2 would remove /bank-service/api/ from url when sending downstream.
-            # - TokenRelay= #used to forward token in request to downstream resource server (not sure why no value is necessary)
 
   security:
     oauth2:
-      resourceserver:
-        jwt:
-          issuer-uri: http://localhost:8080/realms/showcase-realm-2
       client:
         provider:
           keycloak:
@@ -33,16 +28,12 @@ spring:
             authorization-grant-type: authorization_code
             redirect-uri: "http://localhost:8082/login/oauth2/code/{registrationId}"
             scope: openid
-   #   resourceserver:
-    #    jwt:
-      #    jwk-set-uri: ${security.config.keycloak.url}/realms/${security.config.keycloak.realm}/protocol/openid-connect/certs
 
 eureka:
   client:
     service-url:
       defaultZone: http://localhost:8081/eureka
 
-#Actuator endpoints
 management:
   endpoints:
     web:

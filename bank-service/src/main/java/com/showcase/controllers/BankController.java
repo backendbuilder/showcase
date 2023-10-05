@@ -2,26 +2,19 @@ package com.showcase.controllers;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-//import org.springframework.security.authentication.AnonymousAuthenticationToken;
-//import org.springframework.security.core.Authentication;
-//import org.springframework.security.core.annotation.AuthenticationPrincipal;
-//import org.springframework.security.core.context.SecurityContextHolder;
-//import org.springframework.security.oauth2.jwt.Jwt;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController()
-@RequestMapping("/api")
+@RequestMapping("/bank-service")
 public class BankController {
 
-    @GetMapping("/token-info")
-    public ResponseEntity<String> printTokenInfo(){
-
-        return new ResponseEntity<>("this is a secret", HttpStatus.OK);
-    }
-
-/*    @GetMapping("token-info")
+    @GetMapping("token-info")
     public ResponseEntity<String> printTokenInfo(@AuthenticationPrincipal Jwt jwt){
 
         System.out.println("subject (user-id): " + jwt.getSubject());
@@ -37,5 +30,5 @@ public class BankController {
         authentication.getAuthorities().forEach((e) -> System.out.println(e.toString()));
 
         return new ResponseEntity<>("this is a secret", HttpStatus.OK);
-        }*/
+        }
 }
