@@ -1,6 +1,11 @@
 spring:
   application:
     name: bank-service
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          issuer-uri: http://keycloak.mydomain.nl:8080/realms/showcase-realm-2
 server:
   port: 8084
 
