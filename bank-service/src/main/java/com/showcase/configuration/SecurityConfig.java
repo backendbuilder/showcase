@@ -22,32 +22,17 @@ public class SecurityConfig {
         http.authorizeHttpRequests((req) -> req
                         .anyRequest().authenticated());
                 //.anyRequest().hasAnyAuthority("SCOPE_message.read")
-        http.oauth2ResourceServer(t -> t.jwt(Customizer.withDefaults()));
-        //http.oauth2ResourceServer(t-> t.jwt(jwt -> jwt.jwtAuthenticationConverter(jwtAuthenticationConverter())));
+
+        http.oauth2ResourceServer(t-> t.jwt(jwt -> jwt.jwtAuthenticationConverter(jwtAuthenticationConverter())));
         //http.oauth2Login(Customizer.withDefaults());
 
         return http.build();
-
-
-
-
-/*        http.authorizeExchange(authorize -> authorize
-                .pathMatchers("/actuator/**").permitAll()
-                .pathMatchers("bank-service/actuator/**").permitAll()
-                .pathMatchers("/swagger-ui/**", "/v3/api-docs/**").permitAll()
-                .pathMatchers("/login/oath2/**").permitAll()
-                .anyExchange().authenticated());
-        http.oauth2ResourceServer(t-> t.jwt(Customizer.withDefaults()));
-        http.oauth2Login(Customizer.withDefaults());
-
-
-        http.mvcMatcher("/**")
-                .authorizeRequests()
-                .mvcMatchers("/**")
-                .access("hasAuthority('SCOPE_message.read')")
-                .and()
-                .oauth2ResourceServer()
-                .jwt();
-        return http.build();*/
+    }
+    private Converter<Jwt, ? extends AbstractAuthenticationToken> jwtAuthenticationConverter() {
+        JwtAuthenticationConverter jwtConverter = new JwtAuthenticationConverter();
+        jwtConverter.setJwtGrantedAuthoritiesConverter(new RealmRoleConverter());
+        return jwtConverter;
     }
 }
+
+
