@@ -1,7 +1,9 @@
 server:
   port: 8082
-
 spring:
+  output:
+    ansi:
+      enabled: always
   application:
     name: api-gateway
   cloud:
@@ -12,7 +14,7 @@ spring:
         - id: bank-service
           uri: lb://bank-service
           predicates:
-            - Path=/bank-service/**   #matches incoming requests on localhost:8082/bank-service/api
+            - Path=/bank-service/** #matches incoming requests on localhost:8082/bank-service/api
 
   security:
     oauth2:

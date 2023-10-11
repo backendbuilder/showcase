@@ -1,6 +1,9 @@
 spring:
   application:
     name: bank-service
+  output:
+    ansi:
+      enabled: always
   security:
     oauth2:
       resourceserver:
