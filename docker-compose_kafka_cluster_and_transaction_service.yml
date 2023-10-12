@@ -70,7 +70,7 @@ services:
     volumes:
       - kafka_2_data:/bitnami/kafka
 
-  bank-service:
+  transaction-service:
     build: ./transaction-service
     container_name: transaction-service
     image: transaction-service:latest
