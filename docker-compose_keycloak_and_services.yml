@@ -9,7 +9,7 @@ services:
     ports:
       - "8081:8081"
     environment:
-      - "SPRING_PROFILES_ACTIVE=docker"
+      SPRING_PROFILES_ACTIVE: docker
     networks:
       - docker-network
 
@@ -24,7 +24,7 @@ services:
     ports:
       - "8082:8082"
     environment:
-      - "SPRING_PROFILES_ACTIVE=docker"
+      SPRING_PROFILES_ACTIVE: docker
     networks:
       docker-network:
         aliases:
@@ -40,7 +40,7 @@ services:
     ports:
       - "8084:8084"
     environment:
-      - "SPRING_PROFILES_ACTIVE=docker"
+      SPRING_PROFILES_ACTIVE: docker
     networks:
       - docker-network
 
