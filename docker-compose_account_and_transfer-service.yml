@@ -1,0 +1,63 @@
+version: "2"
+
+services:
+
+  transaction-service:
+    build: ./transaction-service
+    container_name: transaction-service
+    image: transaction-service:latest
+    restart: on-failure
+    #depends_on:
+    #  - service-registry
+    ports:
+      - "8085:8085"
+    environment:
+      SPRING_PROFILES_ACTIVE: docker
+
+  bank-account-service:
+    build: ./bank-account-service
+    container_name: bank-account-service
+    image: bank-account-service:latest
+    restart: on-failure
+    #depends_on:
+    #  - service-registry
+    ports:
+      - "8086:8086"
+    environment:
+      SPRING_PROFILES_ACTIVE: docker
+
+  transaction-db:
+    image: postgres
+    restart: on-failure
+    ports:
+      - 5432:5432
+    environment:
+      POSTGRES_USER: showcase-user
+      POSTGRES_PASSWORD: showcase-password
+      POSTGRES_DB: showcase
+    volumes:
+      - transaction_db_data:/var/lib/postgresql/data
+
+  bank-account-db:
+    image: postgres
+    restart: on-failure
+    ports:
+      - 5433:5432
+    environment:
+      POSTGRES_USER: showcase-user
+      POSTGRES_PASSWORD: showcase-password
+      POSTGRES_DB: showcase
+    volumes:
+      - transaction_db_data:/var/lib/postgresql/data
+
+volumes:
+  kafka_0_data:
+    driver: local
+  kafka_1_data:
+    driver: local
+  kafka_2_data:
+    driver: local
+  kafka_magic_config:
+    driver: local
+  transaction_db_data:
+    driver: local

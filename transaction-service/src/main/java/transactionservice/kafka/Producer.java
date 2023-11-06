@@ -1,4 +1,4 @@
-package transactionservice;
+package transactionservice.kafka;
 
 import lombok.AllArgsConstructor;
 import org.springframework.kafka.core.KafkaTemplate;
@@ -6,6 +6,8 @@ import org.springframework.kafka.support.KafkaHeaders;
 import org.springframework.messaging.Message;
 import org.springframework.messaging.support.MessageBuilder;
 import org.springframework.stereotype.Service;
+import transactionservice.model.dtos.PendingTransactionDto;
+import transactionservice.model.dtos.TransactionRequestDto;
 
 @Service
 @AllArgsConstructor
@@ -16,13 +18,13 @@ public class Producer {
 
 
 
-    public void sendMessage(String message){
-        Message<String> kafkaMessage = MessageBuilder
-                .withPayload(message)
+    public void sendMessage(PendingTransactionDto pendingTransactionDto){
+        Message<PendingTransactionDto> kafkaMessage = MessageBuilder
+                .withPayload(pendingTransactionDto)
                 .setHeader(KafkaHeaders.TOPIC, TOPIC)
                 .build();
         System.out.println("producer::sendMessage()");
-        kafkaTemplate.send(TOPIC, message);
+        kafkaTemplate.send(kafkaMessage);
     }
 
 }

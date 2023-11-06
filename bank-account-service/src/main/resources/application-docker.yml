@@ -1,5 +1,5 @@
 server:
-  port: 8085
+  port: 8086
 
 spring:
   jpa:
@@ -7,27 +7,25 @@ spring:
     show-sql: false
     hibernate:
       ddl-auto: create
+  devtools:
+    remote:
+      proxy:
+        port: 5005
+
+
   kafka:
     consumer:
       bootstrap-servers: kafka-0:9092, kafka-1:9092, kafka-2:9092
       group-id: consumer_group_processed_transactions
       auto-offset-reset: earliest
       key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
-      value-deserializer: org.apache.kafka.common.serialization.StringDeserializer
-      spring:
-        kafka:
-          consumer:
-            properties:
-              spring:
-                json:
-                  trusted:
-                    packages=*:
+      value-deserializer: com.showcase.bankaccountservice.kafka.deserialization.PendingTransactionDtoDeserializer
     producer:
       bootstrap-servers: kafka-0:9092, kafka-1:9092, kafka-2:9092
       key-serializer: org.apache.kafka.common.serialization.StringSerializer
-      value-serializer: transactionservice.kafka.serialization.PendingTransactionDtoSerializer
+      value-serializer: org.apache.kafka.common.serialization.StringSerializer
 
   datasource:
-    url: jdbc:postgresql://transaction-db:5432/showcase
+    url: jdbc:postgresql://bank-account-db:5432/showcase
     username: showcase-user
     password: showcase-password
