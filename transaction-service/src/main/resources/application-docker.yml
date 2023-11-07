@@ -2,11 +2,6 @@ server:
   port: 8085
 
 spring:
-  jpa:
-    database-platform: org.hibernate.dialect.PostgreSQL10Dialect
-    show-sql: false
-    hibernate:
-      ddl-auto: create
   kafka:
     consumer:
       bootstrap-servers: kafka-0:9092, kafka-1:9092, kafka-2:9092
@@ -25,7 +20,7 @@ spring:
     producer:
       bootstrap-servers: kafka-0:9092, kafka-1:9092, kafka-2:9092
       key-serializer: org.apache.kafka.common.serialization.StringSerializer
-      value-serializer: transactionservice.kafka.serialization.PendingTransactionDtoSerializer
+      value-serializer: com.showcase.sharedlibrary.serializers.PendingTransactionDtoSerializer
 
   datasource:
     url: jdbc:postgresql://transaction-db:5432/showcase

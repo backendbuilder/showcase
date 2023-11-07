@@ -1,10 +1,10 @@
-package transactionservice.kafka.serialization;
+package com.showcase.sharedlibrary.serializers;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.showcase.sharedlibrary.dtos.PendingTransactionDto;
 import org.apache.kafka.common.errors.SerializationException;
 import org.apache.kafka.common.header.Headers;
 import org.apache.kafka.common.serialization.Serializer;
-import transactionservice.model.dtos.PendingTransactionDto;
 
 import java.util.Map;
 

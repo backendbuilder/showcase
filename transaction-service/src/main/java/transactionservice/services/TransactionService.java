@@ -1,9 +1,9 @@
 package transactionservice.services;
 
+import com.showcase.sharedlibrary.dtos.PendingTransactionDto;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import transactionservice.kafka.Producer;
-import transactionservice.model.dtos.PendingTransactionDto;
 import transactionservice.model.dtos.TransactionRequestDto;
 import transactionservice.model.dtos.mappers.TransactionMapper;
 import transactionservice.model.entities.Transaction;
@@ -22,7 +22,6 @@ public class TransactionService {
         transaction = transactionRepository.save(transaction);
         PendingTransactionDto pendingTransactionDto = mapper.transactionToPendingTransactionDto(transaction);
         producer.sendMessage(pendingTransactionDto);
-        //producer.send
     }
 
 }

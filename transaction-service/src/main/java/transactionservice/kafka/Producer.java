@@ -1,13 +1,13 @@
 package transactionservice.kafka;
 
+import com.showcase.sharedlibrary.dtos.PendingTransactionDto;
 import lombok.AllArgsConstructor;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.kafka.support.KafkaHeaders;
 import org.springframework.messaging.Message;
 import org.springframework.messaging.support.MessageBuilder;
 import org.springframework.stereotype.Service;
-import transactionservice.model.dtos.PendingTransactionDto;
-import transactionservice.model.dtos.TransactionRequestDto;
+
 
 @Service
 @AllArgsConstructor

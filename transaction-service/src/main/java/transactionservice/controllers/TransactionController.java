@@ -20,7 +20,7 @@ public class TransactionController {
 
     @PostMapping(value = "/create-transaction")
     public ResponseEntity<String> createTransaction(@RequestBody TransactionRequestDto dto){
-
+        //ToDO remove println
         System.out.println("dto = " + dto.toString());
         System.out.println("transaction = " + transactionMapper.transactionRequestDtoToTransaction(dto).toString());
 

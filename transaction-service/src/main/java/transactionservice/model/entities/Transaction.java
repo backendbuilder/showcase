@@ -1,8 +1,9 @@
 package transactionservice.model.entities;
 
+import com.showcase.sharedlibrary.enums.TransactionStatus;
 import jakarta.persistence.*;
 import lombok.Data;
-import transactionservice.model.enums.TransactionStatus;
+
 
 import java.math.BigDecimal;
 
@@ -16,8 +17,8 @@ public class Transaction {
         String sender;
         String recipient;
         BigDecimal amount;
-    @Enumerated(EnumType.ORDINAL)
-        TransactionStatus status;
+    @Enumerated(EnumType.STRING)
+    TransactionStatus status;
 
 
     @Override

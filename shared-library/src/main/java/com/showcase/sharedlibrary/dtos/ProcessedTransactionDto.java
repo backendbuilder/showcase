@@ -1,4 +1,4 @@
-package transactionservice.model.dtos;
+package com.showcase.sharedlibrary.dtos;
 
 import java.math.BigDecimal;
 
