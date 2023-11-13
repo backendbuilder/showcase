@@ -102,11 +102,12 @@ services:
     image: postgres
     restart: on-failure
     ports:
-      - 5432:5432
+      - 5434:5434
     environment:
       POSTGRES_USER: showcase-user
       POSTGRES_PASSWORD: showcase-password
-      POSTGRES_DB: showcase
+      POSTGRES_DB: transaction-db
+      PGPORT: 5434
     volumes:
       - transaction_db_data:/var/lib/postgresql/data
 
@@ -114,11 +115,12 @@ services:
     image: postgres
     restart: on-failure
     ports:
-      - 5433:5432
+      - 5433:5433
     environment:
       POSTGRES_USER: showcase-user
       POSTGRES_PASSWORD: showcase-password
-      POSTGRES_DB: showcase
+      POSTGRES_DB: bank-account-db
+      PGPORT: 5433
     volumes:
       - bank-account-db_data:/var/lib/postgresql/data
 

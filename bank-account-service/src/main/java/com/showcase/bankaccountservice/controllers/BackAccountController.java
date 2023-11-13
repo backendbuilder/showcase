@@ -3,7 +3,6 @@ package com.showcase.bankaccountservice.controllers;
 import com.showcase.bankaccountservice.Exceptions.EntityNotFoundException;
 import com.showcase.bankaccountservice.model.dtos.BankAccountCreateRequestDto;
 import com.showcase.bankaccountservice.model.dtos.BankAccountResponseDto;
-import com.showcase.bankaccountservice.model.dtos.BankAccountUpdateRequestDto;
 import com.showcase.bankaccountservice.services.BankAccountService;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;

@@ -7,8 +7,6 @@ import com.showcase.bankaccountservice.model.dtos.BankAccountResponseDto;
 import com.showcase.bankaccountservice.model.dtos.BankAccountUpdateRequestDto;
 import com.showcase.bankaccountservice.model.entities.BankAccount;
 import com.showcase.bankaccountservice.repositories.BankAccountRepository;
-import jakarta.annotation.PostConstruct;
-import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -17,6 +15,7 @@ import java.util.Optional;
 
 @Service
 public class BankAccountService {
+
 
     private final BankAccountRepository bankAccountRepository;
     private static final String NOT_FOUND = "Bank account not found";
@@ -27,7 +26,6 @@ public class BankAccountService {
         bankAccountRepository = repository;
         this.mapper = mapper;
     }
-
 
     //CREATE, provide account holder and amount
     public BankAccountResponseDto createBankAccount(BankAccountCreateRequestDto dto){

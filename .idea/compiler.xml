@@ -1,10 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="CompilerConfiguration">
-    <bytecodeTargetLevel>
-      <module name="bank-account-service.main" target="17" />
-      <module name="bank-account-service.test" target="17" />
-    </bytecodeTargetLevel>
     <annotationProcessing>
       <profile name="Gradle Imported" enabled="true">
         <outputRelativeToContentRoot value="true" />
@@ -12,8 +8,14 @@
           <entry name="$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.projectlombok/lombok/1.18.30/f195ee86e6c896ea47a1d39defbe20eb59cd149d/lombok-1.18.30.jar" />
           <entry name="$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.mapstruct/mapstruct-processor/1.5.5.Final/897f6f115930b936287bef552bf5fe28cc64717d/mapstruct-processor-1.5.5.Final.jar" />
         </processorPath>
-        <module name="bank-account-service.main" />
+        <module name="transaction-service.main" />
       </profile>
     </annotationProcessing>
+    <bytecodeTargetLevel>
+      <module name="shared-module.main" target="17" />
+      <module name="shared-module.test" target="17" />
+      <module name="showcase-shared-library.main" target="17" />
+      <module name="showcase-shared-library.test" target="17" />
+    </bytecodeTargetLevel>
   </component>
 </project>

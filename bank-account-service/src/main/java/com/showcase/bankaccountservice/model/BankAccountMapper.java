@@ -10,6 +10,7 @@ import org.mapstruct.factory.Mappers;
 @Mapper(unmappedTargetPolicy = ReportingPolicy.IGNORE, componentModel = MappingConstants.ComponentModel.SPRING )
 public interface BankAccountMapper {
 
+    //TODO use spring beans in stead of this
     BankAccountMapper MAPPER = Mappers.getMapper(BankAccountMapper.class);
 
     BankAccountResponseDto entityToReponseDto(BankAccount bankAccount);

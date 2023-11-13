@@ -3,29 +3,27 @@ server:
 
 spring:
   jpa:
-    database-platform: org.hibernate.dialect.PostgreSQL10Dialect
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
     show-sql: false
     hibernate:
-      ddl-auto: create
+      ddl-auto: update
   devtools:
     remote:
       proxy:
         port: 5005
-
-
   kafka:
     consumer:
       bootstrap-servers: kafka-0:9092, kafka-1:9092, kafka-2:9092
       group-id: consumer_group_processed_transactions
       auto-offset-reset: earliest
       key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
-      value-deserializer: com.showcase.sharedlibrary.serializers.PendingTransactionDtoSerializer
+      value-deserializer: com.showcase.sharedlibrary.deserializers.PendingTransactionDtoDeserializer
     producer:
       bootstrap-servers: kafka-0:9092, kafka-1:9092, kafka-2:9092
       key-serializer: org.apache.kafka.common.serialization.StringSerializer
-      value-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: com.showcase.sharedlibrary.serializers.ProcessedTransactionDtoSerializer
 
   datasource:
-    url: jdbc:postgresql://bank-account-db:5432/showcase
+    url: jdbc:postgresql://bank-account-db:5433/bank-account-db
     username: showcase-user
     password: showcase-password

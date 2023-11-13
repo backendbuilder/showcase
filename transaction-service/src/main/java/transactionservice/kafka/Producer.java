@@ -23,7 +23,7 @@ public class Producer {
                 .withPayload(pendingTransactionDto)
                 .setHeader(KafkaHeaders.TOPIC, TOPIC)
                 .build();
-        System.out.println("producer::sendMessage()");
+        System.out.println("Transaction-service - Producer::sendMessage()");
         kafkaTemplate.send(kafkaMessage);
     }
 

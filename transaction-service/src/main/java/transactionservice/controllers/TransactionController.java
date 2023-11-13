@@ -11,7 +11,7 @@ import transactionservice.services.TransactionService;
 
 @RestController
 @AllArgsConstructor
-@RequestMapping("/transaction-service")
+@RequestMapping("/transactions")
 public class TransactionController {
 
     private final Producer producer;
