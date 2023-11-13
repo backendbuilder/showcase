@@ -14,6 +14,17 @@ publishing {
             from(components["java"])
         }
     }
+    repositories{
+        maven {
+            name = "GitHubPackages"
+            url = uri("https://maven.pkg.github.com/backendbuilder/showcase")
+            credentials {
+                username = project.findProperty("gpr.user") as String?
+                password = project.findProperty("gpr.token") as String?
+            }
+        }
+    }
+
 }
 
 group = "com.showcase"

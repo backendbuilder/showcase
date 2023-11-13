@@ -18,8 +18,15 @@ configurations {
 }
 
 repositories {
-	mavenLocal()
 	mavenCentral()
+	maven {
+		name = "GitHubPackages"
+		url = uri("https://maven.pkg.github.com/backendbuilder/showcase")
+		credentials {
+			username = project.findProperty("gpr.user") as String?
+			password = project.findProperty("gpr.token") as String?
+		}
+	}
 }
 
 extra["springCloudVersion"] = "2022.0.4"
