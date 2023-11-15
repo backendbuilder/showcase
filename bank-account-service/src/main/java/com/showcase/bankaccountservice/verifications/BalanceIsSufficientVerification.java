@@ -4,7 +4,7 @@ import com.showcase.bankaccountservice.verifications.enums.VerificationStatus;
 
 import java.math.BigDecimal;
 
-public class BalanceIsSufficientVerification extends Verification {
+public class BalanceIsSufficientVerification implements Verification {
 
     private final BigDecimal balance;
     private final BigDecimal transactionAmount;
@@ -15,20 +15,7 @@ public class BalanceIsSufficientVerification extends Verification {
     }
 
     @Override
-    VerificationStatus verify() {
+    public VerificationStatus verify() {
        return (balance.compareTo(transactionAmount)>= 0) ? VerificationStatus.VERIFIED_SUCCESFULLY : VerificationStatus.BALANCE_INSUFFICIENT;
     }
-
-
-
-/*    @Override
-    public VerificationStatus verify(PendingTransactionDto dto, BankAccount bankAccount) {
-        boolean balanceIsSufficient = bankAccount.getBalance().compareTo(dto.amount()) >= 0;
-        if (balanceIsSufficient) {
-            return VerificationStatus.VERIFIED_SUCCESFULLY;
-        } else {
-            return VerificationStatus.BALANCE_INSUFFICIENT;
-
-        }
-    }*/
 }

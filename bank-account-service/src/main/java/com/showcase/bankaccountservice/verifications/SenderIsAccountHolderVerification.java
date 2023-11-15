@@ -2,7 +2,7 @@ package com.showcase.bankaccountservice.verifications;
 
 import com.showcase.bankaccountservice.verifications.enums.VerificationStatus;
 
-public class SenderIsAccountHolderVerification extends Verification {
+public class SenderIsAccountHolderVerification implements Verification {
 
     private final String accountHolderOfBankAccount;
     private final String verifiedUser;
@@ -13,18 +13,7 @@ public class SenderIsAccountHolderVerification extends Verification {
     }
 
     @Override
-    VerificationStatus verify() {
+    public VerificationStatus verify() {
         return accountHolderOfBankAccount.equals(verifiedUser) ? VerificationStatus.VERIFIED_SUCCESFULLY : VerificationStatus.SENDER_IS_NOT_ACCOUNTHOLDER;
     }
-
-/*    @Override
-    public VerificationStatus verify() {
-        boolean senderIsBankAccountHolder = dto.verifiedUser().equals(bankAccount.getAccountHolder());
-        if(senderIsBankAccountHolder) {
-            return VerificationStatus.VERIFIED_SUCCESFULLY;
-        }
-        else {
-            return VerificationStatus.SENDER_IS_NOT_ACCOUNTHOLDER;
-        }
-    }*/
 }

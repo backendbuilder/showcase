@@ -2,7 +2,7 @@ package com.showcase.bankaccountservice.verifications;
 
 import com.showcase.bankaccountservice.verifications.enums.VerificationStatus;
 
-public abstract class Verification {
+public interface Verification {
 
-    abstract VerificationStatus verify();
+    VerificationStatus verify();
 }
