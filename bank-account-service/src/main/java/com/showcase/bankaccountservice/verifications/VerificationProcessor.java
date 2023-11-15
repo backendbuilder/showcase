@@ -23,6 +23,4 @@ public class VerificationProcessor {
         }
         return status;
     }
-
-
 }

@@ -19,7 +19,7 @@ public class BankAccountService {
 
     private final BankAccountRepository bankAccountRepository;
     private static final String NOT_FOUND = "Bank account not found";
-    BankAccountMapper mapper;
+    private final BankAccountMapper mapper;
 
     @Autowired
     public BankAccountService(BankAccountRepository repository, BankAccountMapper mapper){
@@ -29,7 +29,7 @@ public class BankAccountService {
 
     //CREATE, provide account holder and amount
     public BankAccountResponseDto createBankAccount(BankAccountCreateRequestDto dto){
-        BankAccount bankAccount = BankAccountMapper.MAPPER.createRequestDtoToEntity(dto);
+        BankAccount bankAccount = mapper.createRequestDtoToEntity(dto);
         bankAccount = bankAccountRepository.save(bankAccount);
         return mapper.entityToReponseDto(bankAccount);
     }
@@ -37,7 +37,7 @@ public class BankAccountService {
     //READ by id
     public BankAccountResponseDto readBankAccountById(String id) throws EntityNotFoundException {
         Optional<BankAccount> bankAccount = bankAccountRepository.findById(id);
-       return BankAccountMapper.MAPPER.entityToReponseDto(bankAccount.orElseThrow(() -> new EntityNotFoundException(NOT_FOUND)));
+       return mapper.entityToReponseDto(bankAccount.orElseThrow(() -> new EntityNotFoundException(NOT_FOUND)));
     }
 
     //READ by accountHolder
@@ -48,7 +48,7 @@ public class BankAccountService {
            return List.of();
         }
         return bankAccounts.stream()
-                .map(BankAccountMapper.MAPPER::entityToReponseDto)
+                .map(mapper::entityToReponseDto)
                 .toList();
     }
 
@@ -56,8 +56,8 @@ public class BankAccountService {
     //TODO if principal - accountHolder or ADMIN
     public BankAccountResponseDto updateBankAccount(BankAccountUpdateRequestDto dto) throws EntityNotFoundException {
         if (bankAccountRepository.existsById(dto.id())) {
-            BankAccount bankAccount = bankAccountRepository.save(BankAccountMapper.MAPPER.updateRequestDtoToEntity(dto));
-            return BankAccountMapper.MAPPER.entityToReponseDto(bankAccount);
+            BankAccount bankAccount = bankAccountRepository.save(mapper.updateRequestDtoToEntity(dto));
+            return mapper.entityToReponseDto(bankAccount);
         } else throw new EntityNotFoundException(NOT_FOUND);
     }
 
@@ -65,7 +65,7 @@ public class BankAccountService {
 
     public void deleteBankAccount(BankAccountUpdateRequestDto dto) throws EntityNotFoundException {
         if (bankAccountRepository.existsById(dto.id())) {
-            bankAccountRepository.delete(BankAccountMapper.MAPPER.updateRequestDtoToEntity(dto));
+            bankAccountRepository.delete(mapper.updateRequestDtoToEntity(dto));
         } else throw new EntityNotFoundException(NOT_FOUND);
     }
 

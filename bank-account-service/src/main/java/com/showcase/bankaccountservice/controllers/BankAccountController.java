@@ -7,6 +7,7 @@ import com.showcase.bankaccountservice.services.BankAccountService;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
+import lombok.Setter;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -16,7 +17,8 @@ import java.util.List;
 @RestController
 @RequestMapping("accounts")
 @AllArgsConstructor
-public class BackAccountController {
+@Setter
+public class BankAccountController {
 
     private BankAccountService bankAccountService;
 

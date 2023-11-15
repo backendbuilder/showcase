@@ -23,6 +23,6 @@ public class Consumer {
         producer.sendMessage(processedTransactionDto);
         System.out.println("topic = " + record.topic());
         System.out.println("partition = " + record.partition());
-        System.out.println("message = " + pendingTransactionDto.toString());
+        System.out.println("message = " + pendingTransactionDto);
     }
 }
