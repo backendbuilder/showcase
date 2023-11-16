@@ -1,25 +1,21 @@
 package com.showcase.bankaccountservice.repositories;
 
 import com.showcase.bankaccountservice.model.entities.BankAccount;
-import org.junit.jupiter.api.AfterAll;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
-import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.DynamicPropertyRegistry;
 import org.springframework.test.context.DynamicPropertySource;
-import org.springframework.test.context.junit.jupiter.SpringExtension;
-import org.testcontainers.containers.PostgreSQLContainer;
+import org.testcontainers.containers.DockerComposeContainer;
 import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
 
+import java.io.File;
 import java.math.BigDecimal;
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @DataJpaTest
 @Testcontainers
@@ -27,30 +23,19 @@ import static org.junit.jupiter.api.Assertions.*;
 class BankAccountRepositoryTest {
 
     @Container
-    private static final PostgreSQLContainer<?> postgreSQLContainer = new PostgreSQLContainer<>("postgres:latest")
-            .withDatabaseName("bank-account-db")
-            .withUsername("showcase-user")
-            .withPassword("showcase-password");
+    public static DockerComposeContainer dockerComposeContainer =
+            new DockerComposeContainer(new File("src/test/resources/docker-compose_test.yml"))
+                    .withExposedService("bank-account-db", 5433);
 
     @DynamicPropertySource
     static void configureProperties(DynamicPropertyRegistry registry) {
-        registry.add("spring.datasource.url", postgreSQLContainer::getJdbcUrl);
-        registry.add("spring.datasource.username", postgreSQLContainer::getUsername);
-        registry.add("spring.datasource.password", postgreSQLContainer::getPassword);
+        registry.add("spring.datasource.url", () -> "jdbc:tc:postgresql:///bank-account-db" ); //
+        registry.add("spring.datasource.username", () -> "showcase-user");
+        registry.add("spring.datasource.password", () -> "showcase-password");
     }
 
     @Autowired
     private BankAccountRepository bankAccountRepository;
-
-    @BeforeAll
-    static void beforeAll() {
-        postgreSQLContainer.start();
-    }
-
-    @AfterAll
-    static void afterAll() {
-        postgreSQLContainer.stop();
-    }
 
     @Test
     public void testFindByAccountHolder() {
