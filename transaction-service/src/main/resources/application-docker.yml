@@ -11,7 +11,7 @@ spring:
   devtools:
     remote:
       proxy:
-        port: 5005
+        port: 5006
   kafka:
     consumer:
       bootstrap-servers: kafka-0:9092, kafka-1:9092, kafka-2:9092

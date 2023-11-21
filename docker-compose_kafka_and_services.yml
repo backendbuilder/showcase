@@ -79,8 +79,14 @@ services:
     #  - service-registry
     ports:
       - "8085:8085"
+      - "5006:5006"
     environment:
       SPRING_PROFILES_ACTIVE: docker
+      _JAVA_OPTIONS: >
+        -Xdebug
+        -agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:5006
+    networks:
+      my-network:
 
   bank-account-service:
     build: ./bank-account-service
