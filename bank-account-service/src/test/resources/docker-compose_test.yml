@@ -10,7 +10,7 @@ services:
       POSTGRES_PASSWORD: showcase-password
       POSTGRES_DB: bank-account-db
       PGPORT: 5433
-      
+
 volumes:
   bank-account-db_data:
     driver: local
