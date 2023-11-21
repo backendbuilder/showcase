@@ -23,7 +23,12 @@ public class TransactionService {
         Transaction transaction = mapper.transactionRequestDtoToTransaction(transactionRequestDto);
         transaction.setStatus(TransactionStatus.PENDING);
         transaction = transactionRepository.save(transaction);
-        PendingTransactionDto pendingTransactionDto = mapper.transactionToPendingTransactionDto(transaction);
+        PendingTransactionDto pendingTransactionDto = new PendingTransactionDto(
+                transaction.getId(),
+                transactionRequestDto.sender(),
+                transactionRequestDto.recipient(),
+                transactionRequestDto.amount(),
+                transactionRequestDto.accountHolder());
         producer.sendMessage(pendingTransactionDto);
         return mapper.pendingTransactionDtoToToTransactionResponseDto(pendingTransactionDto);
     }

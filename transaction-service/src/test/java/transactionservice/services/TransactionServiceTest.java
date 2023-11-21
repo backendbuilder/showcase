@@ -58,7 +58,6 @@ class TransactionServiceTest {
 
         when(mapper.transactionRequestDtoToTransaction(requestDto)).thenReturn(transaction);
         when(transactionRepository.save(any(Transaction.class))).thenReturn(savedTransaction);
-        when(mapper.transactionToPendingTransactionDto(savedTransaction)).thenReturn(pendingTransactionDto);
 
         // Perform
         transactionService.initiateTransaction(requestDto);
@@ -66,7 +65,6 @@ class TransactionServiceTest {
         // Assert
         verify(mapper).transactionRequestDtoToTransaction(requestDto);
         verify(transactionRepository).save(transaction);
-        verify(mapper).transactionToPendingTransactionDto(savedTransaction);
         verify(producer).sendMessage(pendingTransactionDto);
     }
 }
