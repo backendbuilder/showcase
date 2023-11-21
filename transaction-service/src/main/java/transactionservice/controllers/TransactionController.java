@@ -4,9 +4,8 @@ import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import transactionservice.kafka.Producer;
-import transactionservice.model.dtos.mappers.TransactionMapper;
 import transactionservice.model.dtos.TransactionRequestDto;
+import transactionservice.model.dtos.TransactionResponseDto;
 import transactionservice.services.TransactionService;
 
 @RestController
@@ -14,23 +13,14 @@ import transactionservice.services.TransactionService;
 @RequestMapping("/transactions")
 public class TransactionController {
 
-    private final Producer producer;
-     private final TransactionService transactionService;
-     private final TransactionMapper transactionMapper;
+    private final TransactionService transactionService;
 
-    @PostMapping(value = "/create-transaction")
-    public ResponseEntity<String> createTransaction(@RequestBody TransactionRequestDto dto){
-        //ToDO remove println
-        System.out.println("dto = " + dto.toString());
-        System.out.println("transaction = " + transactionMapper.transactionRequestDtoToTransaction(dto).toString());
-
-        transactionService.initiateTransaction(dto);
-        //producer.sendMessage(TransactionInitializationDtoMapper.INSTANCE.transactionToPendingTransactionDto(dto).toString());
-
-        return new ResponseEntity<>("hey!", HttpStatus.OK);
-
-
+    @PutMapping(value = "/create-transaction")
+    public ResponseEntity<TransactionResponseDto> createTransaction(@RequestBody TransactionRequestDto dto){
+        TransactionResponseDto transactionResponseDto = transactionService.initiateTransaction(dto);
+        return new ResponseEntity<>(transactionResponseDto, HttpStatus.OK);
     }
+
 /*    @GetMapping(value = "/list-transactions")
     public ResponseEntity<String> listTransactions(@RequestParam TransactionStatus status){
 
