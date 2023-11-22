@@ -8,13 +8,21 @@ spring:
     name: api-gateway
   cloud:
     gateway:
-      default-filters:
-        - TokenRelay=
+      #default-filters:
+      # - TokenRelay=
       routes:
         - id: bank-service
           uri: lb://bank-service
           predicates:
-            - Path=/bank-service/** #matches incoming requests on localhost:8082/bank-service/api
+            - Path=/bank-service/**
+        - id: bank-account-service
+          uri: lb://bank-account-service
+          predicates:
+            - Path=/accounts/**
+        - id: transaction-service
+          uri: lb://transaction-service
+          predicates:
+            - Path=/transactions/**
 
   security:
     oauth2:

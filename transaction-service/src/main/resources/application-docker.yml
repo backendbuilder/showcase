@@ -1,13 +1,24 @@
 server:
   port: 8085
 
+eureka:
+  client:
+    service-url:
+      defaultZone: http://service-registry:8081/eureka
+
 spring:
+  application:
+    name: transaction-service
   jpa:
     database-platform: org.hibernate.dialect.PostgreSQLDialect
     show-sql: false
     hibernate:
       ddl-auto: update
-
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          issuer-uri: http://keycloak.mydomain.nl:8080/realms/showcase-realm-2
   devtools:
     remote:
       proxy:
@@ -19,19 +30,10 @@ spring:
       auto-offset-reset: earliest
       key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
       value-deserializer: com.showcase.sharedlibrary.deserializers.ProcessedTransactionDtoDeserializer
-#      spring:
-#        kafka:
-#          consumer:
-#            properties:
-#              spring:
-#                json:
-#                  trusted:
-#                    packages=*:
     producer:
       bootstrap-servers: kafka-0:9092, kafka-1:9092, kafka-2:9092
       key-serializer: org.apache.kafka.common.serialization.StringSerializer
       value-serializer: com.showcase.sharedlibrary.serializers.PendingTransactionDtoSerializer
-
   datasource:
     url: jdbc:postgresql://transaction-db:5434/transaction-db
     username: showcase-user

@@ -29,6 +29,8 @@ repositories {
 	}
 }
 
+extra["springCloudVersion"] = "2022.0.4"
+
 dependencies {
 	implementation("org.springframework.boot:spring-boot-starter-data-jpa")
 	implementation("org.springframework.boot:spring-boot-starter-web")
@@ -37,8 +39,10 @@ dependencies {
 	compileOnly("org.projectlombok:lombok")
 	implementation("com.showcase:shared-library:1.0-SNAPSHOT")
 	implementation("org.mapstruct:mapstruct:1.5.5.Final")
+	implementation("org.springframework.cloud:spring-cloud-starter-netflix-eureka-client")
 	runtimeOnly("org.postgresql:postgresql")
 	annotationProcessor("org.projectlombok:lombok")
+	//implementation ("org.springframework.boot:spring-boot-starter-oauth2-resource-server")
 	annotationProcessor ("org.mapstruct:mapstruct-processor:1.5.5.Final")
 	testImplementation("org.springframework.boot:spring-boot-starter-test")
 	testImplementation("org.springframework.boot:spring-boot-testcontainers")
@@ -46,6 +50,12 @@ dependencies {
 	testImplementation("org.testcontainers:junit-jupiter")
 	testImplementation("org.testcontainers:kafka")
 	testImplementation("org.testcontainers:postgresql")
+}
+
+dependencyManagement {
+	imports {
+		mavenBom("org.springframework.cloud:spring-cloud-dependencies:${property("springCloudVersion")}")
+	}
 }
 
 tasks.withType<Test> {

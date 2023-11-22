@@ -1,8 +1,12 @@
 server:
   port: 8086
 
-spring:
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:8081/eureka
 
+spring:
   jpa:
     database-platform: org.hibernate.dialect.PostgreSQLDialect
     show-sql: false

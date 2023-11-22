@@ -1,5 +1,5 @@
 /*
-package com.showcase.configuration;
+package transactionservice.configuration;
 import org.springframework.core.convert.converter.Converter;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
