@@ -20,16 +20,18 @@ spring:
             scope: openid
   cloud:
     gateway:
+      default-filters:
+        - TokenRelay= #used to forward token in request to downstream resource server
       routes:
         - id: bank-service
           uri: lb://bank-service
           predicates:
           - Path=/bank-service/**
-        - id: bank-account-service
+        - id: accounts
           uri: lb://bank-account-service
           predicates:
             - Path=/accounts/**
-        - id: transaction-service
+        - id: transactions
           uri: lb://transaction-service
           predicates:
             - Path=/transactions/**

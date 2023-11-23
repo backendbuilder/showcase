@@ -8,8 +8,8 @@ spring:
     name: api-gateway
   cloud:
     gateway:
-      #default-filters:
-      # - TokenRelay=
+      default-filters:
+       - TokenRelay=
       routes:
         - id: bank-service
           uri: lb://bank-service
