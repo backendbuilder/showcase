@@ -1,4 +1,4 @@
-/*
+
 package com.showcase.configuration;
 import org.springframework.core.convert.converter.Converter;
 import org.springframework.security.core.GrantedAuthority;
@@ -20,4 +20,4 @@ public class RealmRoleConverter implements Converter<Jwt, Collection<GrantedAuth
                 .map(SimpleGrantedAuthority::new)
                 .collect(Collectors.toList());
     }
-}*/
+}
