@@ -36,7 +36,7 @@ class VerificationProcessorTest {
     }
 
     @Test
-    public void processVerificationsShouldReturnVerifiedSuccessfully() {
+    public void processVerifications_WithValidTransaction_ShouldReturnStatusVerifiedSuccessfully() {
         // Prepare
         BigDecimal balance1 = BigDecimal.valueOf(1000);
         senderBankAccount.setBalance(balance1);
@@ -49,11 +49,11 @@ class VerificationProcessorTest {
         VerificationStatus result = verificationProcessor.verify();
 
         // Assert
-        assertEquals(VerificationStatus.VERIFIED_SUCCESFULLY, result);
+        assertEquals(VerificationStatus.VERIFIED_SUCCESSFULLY, result);
     }
 
     @Test
-    public void processVerificationsShouldReturnBalanceInsufficient() {
+    public void processVerifications_WithInsufficientBalance_ShouldReturnStatusBalanceInsufficient() {
         // Prepare
         BigDecimal balance1 = BigDecimal.valueOf(1000);
         senderBankAccount.setBalance(balance1);
@@ -70,7 +70,7 @@ class VerificationProcessorTest {
     }
 
     @Test
-    public void processVerificationsShouldReturnSenderIsNotAccounholder() {
+    public void processVerifications_WithSenderIsNotAccountholder_ShouldReturnStatusSenderIsNotAccounholder() {
         // Prepare
         BigDecimal balance1 = BigDecimal.valueOf(1000);
         senderBankAccount.setBalance(balance1);

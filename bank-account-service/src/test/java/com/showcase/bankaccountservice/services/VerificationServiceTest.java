@@ -5,10 +5,6 @@ import com.showcase.bankaccountservice.model.entities.BankAccount;
 import com.showcase.bankaccountservice.verifications.enums.VerificationStatus;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.math.BigDecimal;
 
@@ -40,7 +36,7 @@ class VerificationServiceTest {
     }
 
     @Test
-    public void processVerificationsShouldReturnVerifiedSuccessfully() {
+    public void processVerifications_WithValidTransaction_ShouldReturnVerifiedSuccessfully() {
         // Prepare
         BigDecimal balance1 = BigDecimal.valueOf(1000);
         senderBankAccount.setBalance(balance1);
@@ -51,11 +47,11 @@ class VerificationServiceTest {
         VerificationStatus result = verificationService.processVerifications(helper);
 
         // Assert
-        assertEquals(VerificationStatus.VERIFIED_SUCCESFULLY, result);
+        assertEquals(VerificationStatus.VERIFIED_SUCCESSFULLY, result);
     }
 
     @Test
-    public void processVerificationsShouldReturnBalanceInsufficient() {
+    public void processVerifications_withBalanceLowerThanTransactionAmount_ShouldReturnBalanceInsufficient() {
         // Prepare
         BigDecimal balance1 = BigDecimal.valueOf(1000);
         senderBankAccount.setBalance(balance1);
@@ -70,7 +66,7 @@ class VerificationServiceTest {
     }
 
     @Test
-    public void processVerificationsShouldReturnSenderIsNotAccounholder() {
+    public void processVerifications_WithAccountHolderIsNotOwnerOfSenderAccount_ShouldReturnSenderIsNotAccounholder() {
         // Prepare
         BigDecimal balance1 = BigDecimal.valueOf(1000);
         senderBankAccount.setBalance(balance1);

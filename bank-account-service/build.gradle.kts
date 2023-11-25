@@ -35,8 +35,10 @@ dependencies {
 	implementation("org.springframework.boot:spring-boot-starter-data-jpa")
 	implementation("org.springframework.boot:spring-boot-starter-actuator")
 	implementation("org.springframework.boot:spring-boot-devtools:3.1.5")
+	implementation("org.springframework.security:spring-security-core:6.2.0")
+
 	implementation("com.showcase:shared-library:1.0-SNAPSHOT")
-	//implementation("org.springframework.boot:spring-boot-starter-oauth2-resource-server")
+	implementation("org.springframework.boot:spring-boot-starter-oauth2-resource-server")
 	implementation("org.springframework.boot:spring-boot-starter-web")
 	//implementation("org.flywaydb:flyway-core")
 	implementation("org.springframework.cloud:spring-cloud-starter-netflix-eureka-client")
@@ -47,12 +49,13 @@ dependencies {
 	annotationProcessor ("org.mapstruct:mapstruct-processor:1.5.5.Final")
 	implementation("org.springframework.boot:spring-boot-starter-validation")
 	runtimeOnly("org.postgresql:postgresql")
+
 	testImplementation("org.testcontainers:junit-jupiter")
 	testImplementation("org.testcontainers:postgresql")
-
 	testImplementation("org.springframework.boot:spring-boot-starter-test")
 	testImplementation("org.springframework.kafka:spring-kafka-test")
 	testImplementation("org.junit.jupiter:junit-jupiter-api:5.4.2")
+	testImplementation("org.springframework.security:spring-security-test:6.2.0")
 	testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:5.4.2")
 }
 

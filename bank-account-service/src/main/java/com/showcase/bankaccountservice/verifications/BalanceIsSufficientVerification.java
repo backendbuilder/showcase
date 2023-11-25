@@ -16,6 +16,6 @@ public class BalanceIsSufficientVerification implements Verification {
 
     @Override
     public VerificationStatus verify() {
-       return (balance.compareTo(transactionAmount)>= 0) ? VerificationStatus.VERIFIED_SUCCESFULLY : VerificationStatus.BALANCE_INSUFFICIENT;
+       return (balance.compareTo(transactionAmount)>= 0) ? VerificationStatus.VERIFIED_SUCCESSFULLY : VerificationStatus.BALANCE_INSUFFICIENT;
     }
 }

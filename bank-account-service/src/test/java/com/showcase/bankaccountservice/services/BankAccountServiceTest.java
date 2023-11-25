@@ -1,6 +1,6 @@
 package com.showcase.bankaccountservice.services;
 
-import com.showcase.bankaccountservice.Exceptions.EntityNotFoundException;
+import com.showcase.bankaccountservice.exceptions.EntityNotFoundException;
 import com.showcase.bankaccountservice.model.BankAccountMapper;
 import com.showcase.bankaccountservice.model.dtos.BankAccountCreateRequestDto;
 import com.showcase.bankaccountservice.model.dtos.BankAccountResponseDto;

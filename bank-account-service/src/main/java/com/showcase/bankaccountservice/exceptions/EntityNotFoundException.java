@@ -1,4 +1,4 @@
-package com.showcase.bankaccountservice.Exceptions;
+package com.showcase.bankaccountservice.exceptions;
 
 public class EntityNotFoundException extends Exception {
     public EntityNotFoundException(String errorMessage) {

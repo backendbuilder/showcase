@@ -14,6 +14,6 @@ public class SenderIsAccountHolderVerification implements Verification {
 
     @Override
     public VerificationStatus verify() {
-        return accountHolderOfBankAccount.equals(verifiedUser) ? VerificationStatus.VERIFIED_SUCCESFULLY : VerificationStatus.SENDER_IS_NOT_ACCOUNTHOLDER;
+        return accountHolderOfBankAccount.equals(verifiedUser) ? VerificationStatus.VERIFIED_SUCCESSFULLY : VerificationStatus.SENDER_IS_NOT_ACCOUNTHOLDER;
     }
 }

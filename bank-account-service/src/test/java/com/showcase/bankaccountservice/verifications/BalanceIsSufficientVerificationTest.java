@@ -10,7 +10,7 @@ import static org.junit.jupiter.api.Assertions.*;
 class BalanceIsSufficientVerificationTest {
 
     @Test
-    public void testVerifyWithSufficientBalance() {
+    public void balanceIsSufficientVerification_WithSufficientBalance_AndExpectVerifiedSuccessfully() {
         // Prepare
         BigDecimal balance = BigDecimal.valueOf(1000);
         BigDecimal transactionAmount = BigDecimal.valueOf(500);
@@ -20,11 +20,11 @@ class BalanceIsSufficientVerificationTest {
         VerificationStatus result = verification.verify();
 
         // Assert
-        assertEquals(VerificationStatus.VERIFIED_SUCCESFULLY, result);
+        assertEquals(VerificationStatus.VERIFIED_SUCCESSFULLY, result);
     }
 
     @Test
-    public void testVerifyWithInsufficientBalance() {
+    public void balanceIsSufficientVerification_WithInSufficientBalance_AndExpectBalanceInsufficient() {
         // Prepare
         BigDecimal balance = BigDecimal.valueOf(100);
         BigDecimal transactionAmount = BigDecimal.valueOf(500);

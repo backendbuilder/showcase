@@ -17,7 +17,7 @@ public class VerificationProcessor {
         VerificationStatus status = VerificationStatus.VERIFICATION_INCOMPLETE;
         for(Verification verification: verifications){
             status = verification.verify();
-            if(status != VerificationStatus.VERIFIED_SUCCESFULLY){
+            if(status != VerificationStatus.VERIFIED_SUCCESSFULLY){
                 return status;
             }
         }

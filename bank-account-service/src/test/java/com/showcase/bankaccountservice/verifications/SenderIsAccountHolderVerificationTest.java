@@ -7,7 +7,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class SenderIsAccountHolderVerificationTest {
     @Test
-    public void testVerifyWithMatchingAccountHolder() {
+    public void senderIsAccountHolderVerification_withSenderIsAccountHolder_AndExpectVerifiedSuccessfully() {
         // Arrange
         String accountHolder = "HansDimes";
         String verifiedUser = "HansDimes";
@@ -17,11 +17,11 @@ class SenderIsAccountHolderVerificationTest {
         VerificationStatus result = verification.verify();
 
         // Assert
-        assertEquals(VerificationStatus.VERIFIED_SUCCESFULLY, result);
+        assertEquals(VerificationStatus.VERIFIED_SUCCESSFULLY, result);
     }
 
     @Test
-    public void testVerifyWithMismatchedAccountHolder() {
+    public void senderIsAccountHolderVerification_withSenderIsNotAccountHolder_AndExpectStatusSenderIsNotAccountholder() {
         // Arrange
         String accountHolder = "HansDimes";
         String verifiedUser = "DifferentUser";

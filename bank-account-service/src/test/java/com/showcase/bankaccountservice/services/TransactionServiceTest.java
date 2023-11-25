@@ -66,7 +66,7 @@ class TransactionServiceTest {
         // Prepare
         when(bankAccountRepository.findById(SENDER_ACCOUNT_ID)).thenReturn(Optional.of(senderBankAccount));
         when(bankAccountRepository.findById(RECEIVER_ACCOUNT_ID)).thenReturn(Optional.of(receiverBankAccount));
-        when(verificationService.processVerifications(any(TransactionExecutionHelper.class))).thenReturn(VerificationStatus.VERIFIED_SUCCESFULLY);
+        when(verificationService.processVerifications(any(TransactionExecutionHelper.class))).thenReturn(VerificationStatus.VERIFIED_SUCCESSFULLY);
 
         // Perform
         ProcessedTransactionDto result = transactionService.startTransactionProcedure(pendingTransactionDto);
@@ -77,7 +77,7 @@ class TransactionServiceTest {
     }
 
     @Test
-    void startTransactionProcedureShouldReturnTransactionStatusFailed1() {
+    void startTransactionProcedure_SenderAccountNotFound_ShouldReturnTransactionStatusFailed() {
         // Prepare
         when(bankAccountRepository.findById(SENDER_ACCOUNT_ID)).thenReturn(Optional.empty());
         when(bankAccountRepository.findById(RECEIVER_ACCOUNT_ID)).thenReturn(Optional.of(receiverBankAccount));
@@ -90,7 +90,7 @@ class TransactionServiceTest {
     }
 
     @Test
-    void startTransactionProcedureShouldReturnTransactionStatusFailed2() {
+    void startTransactionProcedure_ReceiverAccountNotFound_ShouldReturnTransactionStatusFailed() {
         // Prepare
         when(bankAccountRepository.findById(SENDER_ACCOUNT_ID)).thenReturn(Optional.of(senderBankAccount));
         when(bankAccountRepository.findById(RECEIVER_ACCOUNT_ID)).thenReturn(Optional.empty());
@@ -103,7 +103,7 @@ class TransactionServiceTest {
     }
 
     @Test
-    void startTransactionProcedureShouldReturnTransactionStatusDeclined1() {
+    void startTransactionProcedure_WithInsufficientBalance_ShouldReturnTransactionStatusDeclined() {
         // Prepare
         when(bankAccountRepository.findById(SENDER_ACCOUNT_ID)).thenReturn(Optional.of(senderBankAccount));
         when(bankAccountRepository.findById(RECEIVER_ACCOUNT_ID)).thenReturn(Optional.of(receiverBankAccount));
@@ -117,21 +117,7 @@ class TransactionServiceTest {
     }
 
     @Test
-    void startTransactionProcedureShouldReturnTransactionStatusDeclined2() {
-        // Prepare
-        when(bankAccountRepository.findById(SENDER_ACCOUNT_ID)).thenReturn(Optional.of(senderBankAccount));
-        when(bankAccountRepository.findById(RECEIVER_ACCOUNT_ID)).thenReturn(Optional.of(receiverBankAccount));
-        when(verificationService.processVerifications(any(TransactionExecutionHelper.class))).thenReturn(VerificationStatus.SENDER_IS_NOT_ACCOUNTHOLDER);
-
-        // Perform
-        ProcessedTransactionDto result = transactionService.startTransactionProcedure(pendingTransactionDto);
-
-        // Assert
-        assertEquals(TransactionStatus.DECLINED, result.transactionStatus());
-    }
-
-    @Test
-    void startTransactionProcedureShouldReturnTransactionStatusDeclined3() {
+    void startTransactionProcedure_WithSenderIsNotTheAccountHolder_ShouldReturnTransactionStatusDeclined() {
         // Prepare
         when(bankAccountRepository.findById(SENDER_ACCOUNT_ID)).thenReturn(Optional.of(senderBankAccount));
         when(bankAccountRepository.findById(RECEIVER_ACCOUNT_ID)).thenReturn(Optional.of(receiverBankAccount));

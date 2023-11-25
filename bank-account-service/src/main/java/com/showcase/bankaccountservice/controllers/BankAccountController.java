@@ -1,6 +1,6 @@
 package com.showcase.bankaccountservice.controllers;
 
-import com.showcase.bankaccountservice.Exceptions.EntityNotFoundException;
+import com.showcase.bankaccountservice.exceptions.EntityNotFoundException;
 import com.showcase.bankaccountservice.model.dtos.BankAccountCreateRequestDto;
 import com.showcase.bankaccountservice.model.dtos.BankAccountResponseDto;
 import com.showcase.bankaccountservice.services.BankAccountService;
@@ -10,6 +10,10 @@ import lombok.AllArgsConstructor;
 import lombok.Setter;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PostAuthorize;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -28,39 +32,40 @@ public class BankAccountController {
      * @return the created BankAccount Including the id
      */
 
-    //TODO if principal ADMIN
-
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     @PutMapping("/create-manual")
     public ResponseEntity<BankAccountResponseDto> createBankAccountManual(@RequestBody @Valid BankAccountCreateRequestDto dto){
         return new ResponseEntity<>(bankAccountService.createBankAccount(dto), HttpStatus.CREATED);
     }
 
     /**
-     * Create BankAccount, i uses the authenticated user as accountHolder and sets the balance to zero
+     * Create BankAccount, it uses the authenticated user as accountHolder and sets the balance to zero
      * @return the created BankAccount Including the id
      */
-    //TODO if principal = authenticated
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_CLIENT')")
     @PutMapping("create")
-    public ResponseEntity<BankAccountResponseDto> createBankAccount(){
-        return new ResponseEntity<>(bankAccountService.createNewBankAccount(), HttpStatus.CREATED);
+    public ResponseEntity<BankAccountResponseDto> createBankAccount(@AuthenticationPrincipal Jwt jwt){
+        BankAccountResponseDto bankAccountResponseDto = bankAccountService.createNewBankAccount(jwt);
+        return new ResponseEntity<>(bankAccountResponseDto, HttpStatus.CREATED);
     }
 
     //READ by accountholder
-    //TODO if principal = accountHolder or ADMIN
+    @PreAuthorize("@securityMethods.userIsAccountHolder1(authentication, #accountHolder) OR hasRole('ROLE_ADMIN')")
     @GetMapping("/read-by-accountholder")
     public ResponseEntity<List<BankAccountResponseDto>> readBankAccounts(@RequestParam @NotBlank String accountHolder){
         return new ResponseEntity<>(bankAccountService.readBankAccountsByAccountHolder(accountHolder), HttpStatus.OK);
     }
 
     //READ by bankAccount Id
-    //TODO if principal = accountHolder or ADMIN
+    @PostAuthorize("@securityMethods.userIsAccountHolder2(returnObject, #jwt)  OR hasRole('ROLE_ADMIN')")
     @GetMapping("/read-by-id")
-    public ResponseEntity<BankAccountResponseDto> readBankAccount(@RequestParam @NotBlank String id) throws EntityNotFoundException {
-        return new ResponseEntity<>(bankAccountService.readBankAccountById(id), HttpStatus.OK);
+    public ResponseEntity<BankAccountResponseDto> readBankAccount(@RequestParam @NotBlank String id, @AuthenticationPrincipal Jwt jwt) throws EntityNotFoundException {
+        BankAccountResponseDto bankAccountResponseDto = bankAccountService.readBankAccountById(id);
+        return new ResponseEntity<>(bankAccountResponseDto, HttpStatus.OK);
     }
 
     //DELETE by id
-    //TODO if principal = accountHolder or ADMIN
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     @DeleteMapping("/delete-by-id")
     public void deleteBankAccount(@NotBlank String id) throws EntityNotFoundException {
         bankAccountService.deleteBankAccount(id);

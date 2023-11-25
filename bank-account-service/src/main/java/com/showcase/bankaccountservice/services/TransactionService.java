@@ -36,7 +36,7 @@ public class TransactionService {
         if(sender.isPresent() && recipient.isPresent()){
             TransactionExecutionHelper transactionExecutionHelper = dtoToTransactionHelper(pendingTransactionDto, sender.get(), recipient.get());
             verificationStatus = verificationService.processVerifications(transactionExecutionHelper);
-            if (verificationStatus == VerificationStatus.VERIFIED_SUCCESFULLY){
+            if (verificationStatus == VerificationStatus.VERIFIED_SUCCESSFULLY){
                 transactionStatus = executeTransaction(transactionExecutionHelper);
             } else transactionStatus = TransactionStatus.DECLINED;
         } else transactionStatus = TransactionStatus.FAILED;
