@@ -30,7 +30,7 @@ repositories {
 }
 
 extra["springCloudVersion"] = "2022.0.4"
-
+//TODO sort dependencies nicely, be careful on the order of mapstruct and lombok, otherwise mapstruct might fail
 dependencies {
 	implementation("org.springframework.boot:spring-boot-starter-data-jpa")
 	implementation("org.springframework.boot:spring-boot-starter-web")
@@ -42,10 +42,11 @@ dependencies {
 	implementation("org.springframework.cloud:spring-cloud-starter-netflix-eureka-client")
 	runtimeOnly("org.postgresql:postgresql")
 	annotationProcessor("org.projectlombok:lombok")
-	//implementation ("org.springframework.boot:spring-boot-starter-oauth2-resource-server")
+	implementation ("org.springframework.boot:spring-boot-starter-oauth2-resource-server")
 	annotationProcessor ("org.mapstruct:mapstruct-processor:1.5.5.Final")
 	testImplementation("org.springframework.boot:spring-boot-starter-test")
 	testImplementation("org.springframework.boot:spring-boot-testcontainers")
+	testImplementation("org.springframework.security:spring-security-test:6.2.0")
 	testImplementation("org.springframework.kafka:spring-kafka-test")
 	testImplementation("org.testcontainers:junit-jupiter")
 	testImplementation("org.testcontainers:kafka")

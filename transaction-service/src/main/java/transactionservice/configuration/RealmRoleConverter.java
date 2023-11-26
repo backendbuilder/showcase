@@ -1,5 +1,5 @@
-/*
 package transactionservice.configuration;
+
 import org.springframework.core.convert.converter.Converter;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -16,8 +16,8 @@ public class RealmRoleConverter implements Converter<Jwt, Collection<GrantedAuth
         final Map<String, List<String>> realmAccess = (Map<String, List<String>>) jwt.getClaims().get("realm_access");
         return realmAccess.get("roles")
                 .stream()
-                .map(roleName -> "ROLE_" + roleName) // prefix required by Spring Security for roles.
+                .map(roleName -> "ROLE_" + roleName)
                 .map(SimpleGrantedAuthority::new)
                 .collect(Collectors.toList());
     }
-}*/
+}
