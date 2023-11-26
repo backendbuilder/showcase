@@ -13,12 +13,15 @@ import transactionservice.repositories.TransactionRepository;
 @AllArgsConstructor
 public class Consumer {
 
+    private static final String PROCESSED_TRANSACTIONS_TOPIC = "processed_transactions_topic";
+    private static final String CONSUMER_GROUP_PROCESSED_TRANSACTIONS = "consumer_group_processed_transactions";
     private final TransactionRepository transactionRepository;
     private final TransactionMapper mapper;
 
-    @KafkaListener(topics = "processed_transactions_topic",groupId = "consumer_group_processed_transactions")
+    @KafkaListener(topics = PROCESSED_TRANSACTIONS_TOPIC, groupId = CONSUMER_GROUP_PROCESSED_TRANSACTIONS)
     public void consumeMessage( ConsumerRecord<String, ProcessedTransactionDto> record
     ){
+        //TODO remove println() or replace with logger
         System.out.println("Transaction-service - Consumer::consumeMessage");
         transactionRepository.save(mapper.processedTransactionDtoToTransaction(record.value()));
     }

@@ -19,6 +19,7 @@ spring:
       resourceserver:
         jwt:
           issuer-uri: http://keycloak.mydomain.nl:8080/realms/showcase-realm-2
+  #//TODO Move devtools to only exist under profile "Dev" and conditionally add the devtools dependency as well
   devtools:
     remote:
       proxy:
