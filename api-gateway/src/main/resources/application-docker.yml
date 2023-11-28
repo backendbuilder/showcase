@@ -1,5 +1,5 @@
 server:
-  port: 8082
+  port: 8082 #//TODO Make api-gateway run on port 8080
 
 spring:
   application:

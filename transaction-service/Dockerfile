@@ -16,7 +16,7 @@ FROM amazoncorretto:17
 # Copy the application by hardcoded file name, TODO always build latest version, version msut be not hard coded
 COPY --from=builder /app/build/libs/transaction-service-0.0.1-SNAPSHOT.jar /app/app.jar
 
-# Expose the port your application will run on
+# Expose the port your application will run on (only within the docker network, not to the host)
 EXPOSE 8085
 
 # Define the default command to run your Spring Boot application
