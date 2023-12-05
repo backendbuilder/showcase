@@ -18,6 +18,8 @@ import org.springframework.test.web.servlet.MockMvc;
 import java.math.BigDecimal;
 import java.util.List;
 
+import static org.hamcrest.core.AnyOf.anyOf;
+import static org.hamcrest.core.StringContains.containsString;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
@@ -33,6 +35,12 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @EnableMethodSecurity
 class BankAccountControllerTest {
 
+    public static final String BLANK = "";
+    public static final String ROLE_ADMIN = "ROLE_ADMIN";
+    public static final String ROLE_CLIENT = "ROLE_CLIENT";
+    public static final String PARAMETER_ACCOUNTHOLDER = "accountHolder";
+    public static final String PARAMETER_ID = "id";
+    public static final String RESPONSE_MESSAGE_ENTITY_NOT_FOUND = "Entity not found";
     @Autowired
     private MockMvc mockMvc;
 
@@ -73,7 +81,7 @@ class BankAccountControllerTest {
                                         }
                                         """)
                                 .contentType(MediaType.APPLICATION_JSON)
-                                .with(jwt().authorities(new SimpleGrantedAuthority("ROLE_ADMIN"))))
+                                .with(jwt().authorities(new SimpleGrantedAuthority(ROLE_ADMIN))))
                 .andExpect(status().isCreated()
                 )
                 .andExpect(content().json("""
@@ -84,6 +92,52 @@ class BankAccountControllerTest {
                    "accountHolder": "HarryBanks"
                }
                 """));
+    }
+
+    @Test
+    void createBankAccountManual_WithBlankAccountHolder_AndExpectStatusBadRequest() throws Exception {
+        //prepare
+        when(bankAccountService.createBankAccount(bankAccountCreateRequestDto)).thenReturn(bankAccountResponseDto1);
+
+        // perform the PUT request and validate the response
+        mockMvc.perform(
+                        put("/accounts/create-manual")
+                                .content("""
+                                        {
+                                        "balance" : "-1",
+                                        "accountHolder" : ""
+                                        }
+                                        """)
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .with(jwt().authorities(new SimpleGrantedAuthority(ROLE_ADMIN))))
+                .andExpect(status().isBadRequest())
+                .andExpect(content().string(anyOf(
+                        containsString("""
+                        {"errors":["balance is not valid, must at least be 0","account holder can't be empty"]}"""),
+                        containsString("""
+                        {"errors":["account holder can't be empty","balance is not valid, must at least be 0"]}""")
+                )));
+    }
+
+    @Test
+    void createBankAccountManual_WithNegativeBalance_AndExpectStatusBadRequest() throws Exception {
+        //prepare
+        when(bankAccountService.createBankAccount(bankAccountCreateRequestDto)).thenReturn(bankAccountResponseDto1);
+
+        // perform the PUT request and validate the response
+        mockMvc.perform(
+                        put("/accounts/create-manual")
+                                .content("""
+                                        {
+                                        "balance" : "-1",
+                                        "accountHolder" : "HarryBanks"
+                                        }
+                                        """)
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .with(jwt().authorities(new SimpleGrantedAuthority(ROLE_ADMIN))))
+                .andExpect(status().isBadRequest())
+                .andExpect(content().string("""
+                        {"errors":["balance is not valid, must at least be 0"]}"""));
     }
 
     @Test
@@ -101,7 +155,7 @@ class BankAccountControllerTest {
                                         }
                                         """)
                                 .contentType(MediaType.APPLICATION_JSON)
-                                .with(jwt().authorities(new SimpleGrantedAuthority("ROLE_CLIENT"))))
+                                .with(jwt().authorities(new SimpleGrantedAuthority(ROLE_CLIENT))))
                 .andExpect(status().isForbidden()
                 )
                 .andExpect(content().string("Access Denied"));
@@ -134,7 +188,7 @@ class BankAccountControllerTest {
         // perform the PUT request and validate the response
         mockMvc.perform(
                         put("/accounts/create")
-                                .with(jwt().authorities(new SimpleGrantedAuthority("ROLE_ADMIN"))))
+                                .with(jwt().authorities(new SimpleGrantedAuthority(ROLE_ADMIN))))
                 .andExpect(status().isCreated()
                 )
                 .andExpect(content().json("""
@@ -155,7 +209,7 @@ class BankAccountControllerTest {
         // perform the PUT request and validate the response
         mockMvc.perform(
                         put("/accounts/create")
-                                .with(jwt().authorities(new SimpleGrantedAuthority("ROLE_CLIENT"))))
+                                .with(jwt().authorities(new SimpleGrantedAuthority(ROLE_CLIENT))))
                 .andExpect(status().isCreated()
                 )
                 .andExpect(content().json("""
@@ -190,8 +244,8 @@ class BankAccountControllerTest {
 
         // perform the GET request and validate the response
         mockMvc.perform(
-                        get("/accounts/read-by-id").param("id", ID1)
-                                .with(jwt().authorities(new SimpleGrantedAuthority("ROLE_CLIENT"))))
+                        get("/accounts/read-by-id").param(PARAMETER_ID, ID1)
+                                .with(jwt().authorities(new SimpleGrantedAuthority(ROLE_CLIENT))))
                 .andExpect(status().isOk())
                 .andExpect(content().json("""
                
@@ -210,8 +264,8 @@ class BankAccountControllerTest {
 
         // perform the GET request and validate the response
         mockMvc.perform(
-                        get("/accounts/read-by-id").param("id", ID1)
-                                .with(jwt().authorities(new SimpleGrantedAuthority("ROLE_ADMIN"))))
+                        get("/accounts/read-by-id").param(PARAMETER_ID, ID1)
+                                .with(jwt().authorities(new SimpleGrantedAuthority(ROLE_ADMIN))))
                 .andExpect(status().isOk())
                 .andExpect(content().json("""
                
@@ -224,14 +278,29 @@ class BankAccountControllerTest {
     }
 
     @Test
+    void readBankAccountById_WithBlankId_AndExpectStatusBadRequest() throws Exception {
+        when(securityMethods.userIsAccountHolder2(any(), any())).thenReturn(true);
+        when(bankAccountService.readBankAccountById(ID1)).thenReturn(bankAccountResponseDto1);
+
+        // perform the GET request and validate the response
+        mockMvc.perform(
+                        get("/accounts/read-by-id").param(PARAMETER_ID, BLANK)
+                                .with(jwt().authorities(new SimpleGrantedAuthority(ROLE_CLIENT))))
+                .andExpect(status().isBadRequest())
+                .andExpect(content().string("""
+                        {"errors":["id must not be empty"]}"""));
+    }
+
+
+    @Test
     void readBankAccountById_NotAdminAndNotAccountHolder_AndExpectStatusForbidden() throws Exception {
         when(securityMethods.userIsAccountHolder2(any(), any())).thenReturn(false);
         when(bankAccountService.readBankAccountById(ID1)).thenReturn(bankAccountResponseDto1);
 
         // perform the GET request and validate the response
         mockMvc.perform(
-                        get("/accounts/read-by-id").param("id", ID1)
-                                .with(jwt().authorities(new SimpleGrantedAuthority("ROLE_CLIENT"))))
+                        get("/accounts/read-by-id").param(PARAMETER_ID, ID1)
+                                .with(jwt().authorities(new SimpleGrantedAuthority(ROLE_CLIENT))))
                 .andExpect(status().isForbidden());
     }
 
@@ -242,7 +311,7 @@ class BankAccountControllerTest {
 
         // perform the GET request and validate the response
         mockMvc.perform(
-                        get("/accounts/read-by-id").param("id", ID1)
+                        get("/accounts/read-by-id").param(PARAMETER_ID, ID1)
                                 .with(csrf()))
                 .andExpect(status().isUnauthorized());
     }
@@ -251,15 +320,15 @@ class BankAccountControllerTest {
     @Test
     void readBankAccountById_WithNotExistingBankAccount_AndExpectNotFoundException() throws Exception {
         //prepare
-        when(bankAccountService.readBankAccountById(ID1)).thenThrow(new EntityNotFoundException("Entity not found"));
+        when(bankAccountService.readBankAccountById(ID1)).thenThrow(new EntityNotFoundException(RESPONSE_MESSAGE_ENTITY_NOT_FOUND));
 
         // perform the GET request and validate the response
         mockMvc.perform(
-                        get("/accounts/read-by-id").param("id", ID1)
-                                .with(jwt().authorities(new SimpleGrantedAuthority("ROLE_ADMIN"))))
+                        get("/accounts/read-by-id").param(PARAMETER_ID, ID1)
+                                .with(jwt().authorities(new SimpleGrantedAuthority(ROLE_ADMIN))))
                 .andExpect(status().isNotFound())
                 .andExpect(result -> assertTrue(result.getResolvedException() instanceof EntityNotFoundException))
-                .andExpect(result ->  assertEquals("Entity not found", result.getResolvedException().getMessage()));
+                .andExpect(result ->  assertEquals(RESPONSE_MESSAGE_ENTITY_NOT_FOUND, result.getResolvedException().getMessage()));
     }
 
     @Test
@@ -271,8 +340,8 @@ class BankAccountControllerTest {
 
         // perform the GET request and validate the response
         mockMvc.perform(
-                        get("/accounts/read-by-accountholder").param("accountHolder", ACCOUNTHOLDER1)
-                                .with(jwt().authorities(new SimpleGrantedAuthority("ROLE_ADMIN"))))
+                        get("/accounts/read-by-accountholder").param(PARAMETER_ACCOUNTHOLDER, ACCOUNTHOLDER1)
+                                .with(jwt().authorities(new SimpleGrantedAuthority(ROLE_ADMIN))))
                 .andExpect(status().isOk())
                 .andExpect(content().json("""
                 [
@@ -299,8 +368,8 @@ class BankAccountControllerTest {
 
         // perform the GET request and validate the response
         mockMvc.perform(
-                        get("/accounts/read-by-accountholder").param("accountHolder", ACCOUNTHOLDER1)
-                                .with(jwt().authorities(new SimpleGrantedAuthority("ROLE_CLIENT"))))
+                        get("/accounts/read-by-accountholder").param(PARAMETER_ACCOUNTHOLDER, ACCOUNTHOLDER1)
+                                .with(jwt().authorities(new SimpleGrantedAuthority(ROLE_CLIENT))))
                 .andExpect(status().isOk())
                 .andExpect(content().json("""
                 [
@@ -326,13 +395,28 @@ class BankAccountControllerTest {
 
         // perform the GET request and validate the response
         mockMvc.perform(
-                        get("/accounts/read-by-accountholder").param("accountHolder", ACCOUNTHOLDER1)
-                                .with(jwt().authorities(new SimpleGrantedAuthority("ROLE_ADMIN"))))
+                        get("/accounts/read-by-accountholder").param(PARAMETER_ACCOUNTHOLDER, ACCOUNTHOLDER1)
+                                .with(jwt().authorities(new SimpleGrantedAuthority(ROLE_ADMIN))))
                 .andExpect(status().isOk())
                 .andExpect(content().json("""
                 [
                 ]
                 """));
+    }
+
+    @Test
+    void readBankAccountsByAccountHolder_WithBlankAccountHolder_AndExpectStatusBadRequest() throws Exception {
+        //prepare
+        List<BankAccountResponseDto> bankAccounts = List.of();
+        when(bankAccountService.readBankAccountsByAccountHolder(ACCOUNTHOLDER1)).thenReturn(bankAccounts);
+
+        // perform the GET request and validate the response
+        mockMvc.perform(
+                        get("/accounts/read-by-accountholder").param(PARAMETER_ACCOUNTHOLDER, BLANK)
+                                .with(jwt().authorities(new SimpleGrantedAuthority(ROLE_ADMIN))))
+                .andExpect(status().isBadRequest())
+                .andExpect(content().string("""
+                        {"errors":["accountHolder must not be empty"]}"""));
     }
 
     @Test
@@ -344,8 +428,8 @@ class BankAccountControllerTest {
 
         // perform the GET request and validate the response
         mockMvc.perform(
-                        get("/accounts/read-by-accountholder").param("accountHolder", ACCOUNTHOLDER1)
-                                .with(jwt().authorities(new SimpleGrantedAuthority("ROLE_CLIENT"))))
+                        get("/accounts/read-by-accountholder").param(PARAMETER_ACCOUNTHOLDER, ACCOUNTHOLDER1)
+                                .with(jwt().authorities(new SimpleGrantedAuthority(ROLE_CLIENT))))
                 .andExpect(status().isForbidden());
     }
 
@@ -358,41 +442,52 @@ class BankAccountControllerTest {
 
         // perform the GET request and validate the response
         mockMvc.perform(
-                        get("/accounts/read-by-accountholder").param("accountHolder", ACCOUNTHOLDER1)
+                        get("/accounts/read-by-accountholder").param(PARAMETER_ACCOUNTHOLDER, ACCOUNTHOLDER1)
                                 .with(csrf()))
                 .andExpect(status().isUnauthorized());
     }
 
     @Test
-    void deleteBankAccount_WithNoneExistingBankAccountId_ShouldThrowNotEntityNotFoundException() throws Exception {
+    void deleteBankAccount_WithNoneExistingBankAccountId_ShouldReturnStatusBadRequest() throws Exception {
         //prepare
-        doThrow(new EntityNotFoundException("Entity not found")).when(bankAccountService).deleteBankAccount(ID1);
+        doThrow(new EntityNotFoundException(RESPONSE_MESSAGE_ENTITY_NOT_FOUND)).when(bankAccountService).deleteBankAccount(ID1);
         // perform the DELETE request and validate the response
         mockMvc.perform(
-                        delete("/accounts/delete-by-id").param("id", ID1)
-                                .with(jwt().authorities(new SimpleGrantedAuthority("ROLE_ADMIN"))))
+                        delete("/accounts/delete-by-id").param(PARAMETER_ID, ID1)
+                                .with(jwt().authorities(new SimpleGrantedAuthority(ROLE_ADMIN))))
                 .andExpect(status().isNotFound())
-                .andExpect(result -> assertTrue(result.getResolvedException() instanceof EntityNotFoundException))
-                .andExpect(result ->  assertEquals("Entity not found", result.getResolvedException().getMessage()));
+                .andExpect(content().string(RESPONSE_MESSAGE_ENTITY_NOT_FOUND));
+
+    }
+
+    @Test
+    void deleteBankAccount_withBlankId_AndExpectStatusBadRequest() throws Exception {
+        // perform the DELETE request and validate the response
+        mockMvc.perform(
+                        delete("/accounts/delete-by-id").param(PARAMETER_ID, BLANK)
+                                .with(jwt().authorities(new SimpleGrantedAuthority(ROLE_ADMIN))))
+                .andExpect(status().isBadRequest())
+                .andExpect(content().string("""
+                        {"errors":["id must not be empty"]}"""));
     }
 
     @Test
     void deleteBankAccount_WithExistingBankAccountId_AndExpectStatusOk() throws Exception {
-        //prepare
         // perform the DELETE request and validate the response
         mockMvc.perform(
-                        delete("/accounts/delete-by-id").param("id", "")
-                                .with(jwt().authorities(new SimpleGrantedAuthority("ROLE_ADMIN"))))
+                        delete("/accounts/delete-by-id").param(PARAMETER_ID, ID1)
+                                .with(jwt().authorities(new SimpleGrantedAuthority(ROLE_ADMIN))))
                 .andExpect(status().isOk());
     }
+
 
     @Test
     void deleteBankAccount_AsClient_AndExpectStatusForbidden() throws Exception {
         //prepare
         // perform the DELETE request and validate the response
         mockMvc.perform(
-                        delete("/accounts/delete-by-id").param("id", "")
-                                .with(jwt().authorities(new SimpleGrantedAuthority("ROLE_CLIENT"))))
+                        delete("/accounts/delete-by-id").param(PARAMETER_ID, ID1)
+                                .with(jwt().authorities(new SimpleGrantedAuthority(ROLE_CLIENT))))
                 .andExpect(status().isForbidden());
     }
 
@@ -401,7 +496,7 @@ class BankAccountControllerTest {
         //prepare
         // perform the DELETE request and validate the response
         mockMvc.perform(
-                        delete("/accounts/delete-by-id").param("id", "")
+                        delete("/accounts/delete-by-id").param(PARAMETER_ID, ID1)
                                 .with(csrf()))
                 .andExpect(status().isUnauthorized());
     }

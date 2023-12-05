@@ -7,13 +7,14 @@ import com.showcase.bankaccountservice.services.BankAccountService;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
-import lombok.Setter;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PostAuthorize;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.oauth2.jwt.Jwt;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -21,7 +22,7 @@ import java.util.List;
 @RestController
 @RequestMapping("accounts")
 @AllArgsConstructor
-@Setter
+@Validated
 public class BankAccountController {
 
     private BankAccountService bankAccountService;
@@ -43,7 +44,7 @@ public class BankAccountController {
      * @return the created BankAccount Including the id
      */
     @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_CLIENT')")
-    @PutMapping("create")
+    @PutMapping("/create")
     public ResponseEntity<BankAccountResponseDto> createBankAccount(@AuthenticationPrincipal Jwt jwt){
         BankAccountResponseDto bankAccountResponseDto = bankAccountService.createNewBankAccount(jwt);
         return new ResponseEntity<>(bankAccountResponseDto, HttpStatus.CREATED);
@@ -51,15 +52,15 @@ public class BankAccountController {
 
     //READ by accountholder
     @PreAuthorize("@securityMethods.userIsAccountHolder1(authentication, #accountHolder) OR hasRole('ROLE_ADMIN')")
-    @GetMapping("/read-by-accountholder")
-    public ResponseEntity<List<BankAccountResponseDto>> readBankAccounts(@RequestParam @NotBlank String accountHolder){
+    @GetMapping(value ="/read-by-accountholder", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<List<BankAccountResponseDto>> readBankAccounts(@RequestParam @NotBlank(message = "accountHolder must not be empty") String accountHolder){
         return new ResponseEntity<>(bankAccountService.readBankAccountsByAccountHolder(accountHolder), HttpStatus.OK);
     }
 
     //READ by bankAccount Id
     @PostAuthorize("@securityMethods.userIsAccountHolder2(returnObject, #jwt)  OR hasRole('ROLE_ADMIN')")
     @GetMapping("/read-by-id")
-    public ResponseEntity<BankAccountResponseDto> readBankAccount(@RequestParam @NotBlank String id, @AuthenticationPrincipal Jwt jwt) throws EntityNotFoundException {
+    public ResponseEntity<BankAccountResponseDto> readBankAccount(@RequestParam @NotBlank(message = "id must not be empty") String id, @AuthenticationPrincipal Jwt jwt) throws EntityNotFoundException {
         BankAccountResponseDto bankAccountResponseDto = bankAccountService.readBankAccountById(id);
         return new ResponseEntity<>(bankAccountResponseDto, HttpStatus.OK);
     }
@@ -67,7 +68,7 @@ public class BankAccountController {
     //DELETE by id
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     @DeleteMapping("/delete-by-id")
-    public void deleteBankAccount(@NotBlank String id) throws EntityNotFoundException {
+    public void deleteBankAccount(@NotBlank(message = "id must not be empty") String id) throws EntityNotFoundException {
         bankAccountService.deleteBankAccount(id);
     }
 }
