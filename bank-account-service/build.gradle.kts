@@ -46,6 +46,7 @@ dependencies {
 	implementation("org.springframework.boot:spring-boot-devtools:3.1.5")
 	implementation("org.mapstruct:mapstruct:1.5.5.Final")
 	implementation("com.showcase:shared-library:1.0-SNAPSHOT")
+	implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:2.3.0")
 
 	runtimeOnly("org.postgresql:postgresql")
 

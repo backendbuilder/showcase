@@ -54,6 +54,7 @@ public class BankAccountService {
     }
 
     //UPDATE
+    //TODO create controller to update a BankAccount
     public BankAccountResponseDto updateBankAccount(BankAccountUpdateRequestDto dto) throws EntityNotFoundException {
         if (bankAccountRepository.existsById(dto.id())) {
             BankAccount bankAccount = bankAccountRepository.save(mapper.updateRequestDtoToEntity(dto));

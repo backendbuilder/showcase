@@ -1,5 +1,7 @@
 server:
   port: 8082
+  servlet:
+    context-path: /
 spring:
   output:
     ansi:
@@ -11,10 +13,6 @@ spring:
       default-filters:
        - TokenRelay=
       routes:
-        - id: bank-service
-          uri: lb://bank-service
-          predicates:
-            - Path=/bank-service/**
         - id: bank-account-service
           uri: lb://bank-account-service
           predicates:
@@ -23,6 +21,19 @@ spring:
           uri: lb://transaction-service
           predicates:
             - Path=/transactions/**
+        - id: bank-account-service open-api UI
+          uri: lb://bank-account-service
+          predicates:
+            - Path=/bank-account-service/v3/api-docs
+            - Method=GET
+        - id: transaction-service open-api UI
+          uri: lb://transaction-service
+          predicates:
+            - Path=/transaction-service/v3/api-docs
+            - Method=GET
+
+
+
 
   security:
     oauth2:
@@ -34,7 +45,7 @@ spring:
           api-gateway:
             provider: keycloak
             client-id: showcase-client-2
-            client-secret: RUdoTm2ozmG60qGQ9X8srXIJLubg4A6C
+            client-secret: DCyddhc3eXAY6cAcRiYdCpUTIHLlQ15Q
             authorization-grant-type: authorization_code
             redirect-uri: "http://localhost:8082/login/oauth2/code/{registrationId}"
             scope: openid
@@ -52,3 +63,18 @@ management:
 logging:
   level:
     root: INFO
+
+springdoc:
+  api-docs:
+    enabled: true
+  swagger-ui:
+    enabled: true
+    path: /swagger-ui.html
+    config-url: /v3/api-docs/swagger-config
+    urls:
+      - url: /v3/api-docs
+        name: API Gateway Service
+      - url: /bank-account-service/v3/api-docs
+        name: Bank Account Service
+      - url: /transaction-service/v3/api-docs
+        name: Transaction Service

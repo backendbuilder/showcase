@@ -1,5 +1,7 @@
 server:
   port: 8086
+  servlet:
+    context-path: /
 
 eureka:
   client:
@@ -32,3 +34,15 @@ spring:
     url: jdbc:postgresql://localhost:5433/bank-account-db
     username: showcase-user
     password: showcase-password
+
+openapi:
+  service:
+    title: bank-account-service #title that you will want to display in the swagger ui
+    version: 1.0.0
+    url: http://bank.mydomain.nl:8082 #api gateway url
+springdoc:
+  api-docs:
+    path: /bank-account-service/v3/api-docs #these urls will used to load the swagger ui of this service by the api gateway
+  swagger-ui:
+    path: /bank-account-service/swagger-ui.html
+

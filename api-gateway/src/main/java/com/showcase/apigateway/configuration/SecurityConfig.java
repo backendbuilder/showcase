@@ -26,6 +26,7 @@ public class SecurityConfig {
         http.authorizeExchange(authorize -> authorize.matchers(authorizationHeaderMatcher()).permitAll()
                 .anyExchange().authenticated());
         http.csrf(ServerHttpSecurity.CsrfSpec::disable);
+        http.cors(ServerHttpSecurity.CorsSpec::disable);
         http.oauth2Login(Customizer.withDefaults());
         return http.build();
     }

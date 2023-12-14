@@ -22,11 +22,14 @@ spring:
     gateway:
       default-filters:
         - TokenRelay= #used to forward token in request to downstream resource server
+        - DedupeResponseHeader=Access-Control-Allow-Origin Access-Control-Allow-Credentials, RETAIN_UNIQUE
+      globalcors:
+          cors-configurations:
+            '[/**]':
+              allowed-origins: "*"
+              allowed-methods: "*"
+              allowed-headers: "*"
       routes:
-        - id: bank-service
-          uri: lb://bank-service
-          predicates:
-          - Path=/bank-service/**
         - id: accounts
           uri: lb://bank-account-service
           predicates:
@@ -35,8 +38,16 @@ spring:
           uri: lb://transaction-service
           predicates:
             - Path=/transactions/**
-      #default-filters:
-      #  - TokenRelay= #used to forward token in request to downstream resource server
+        - id: bank-account-service open-api UI
+          uri: lb://bank-account-service
+          predicates:
+            - Path=/bank-account-service/v3/api-docs
+            - Method=GET
+        - id: transaction-service open-api UI
+          uri: lb://transaction-service
+          predicates:
+            - Path=/transaction-service/v3/api-docs
+            - Method=GET
 
 eureka:
   client:

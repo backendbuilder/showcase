@@ -12,6 +12,7 @@ import org.springframework.security.config.annotation.web.configurers.AbstractHt
 import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationConverter;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
 @EnableWebSecurity
 @EnableMethodSecurity
@@ -21,7 +22,12 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http.csrf(AbstractHttpConfigurer::disable);
-        http.authorizeHttpRequests((req) -> req.anyRequest().authenticated());
+        http.cors(AbstractHttpConfigurer::disable);
+        http.authorizeHttpRequests((req) -> req
+                .requestMatchers("/bank-account-service/v3/api-docs").permitAll()
+                .requestMatchers("/bank-account-service/swagger-ui.html").permitAll()
+                .anyRequest().authenticated());
+
         http.oauth2ResourceServer(t-> t.jwt(jwt -> jwt.jwtAuthenticationConverter(jwtAuthenticationConverter())));
         //http.oauth2Login(Customizer.withDefaults());
         return http.build();

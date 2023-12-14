@@ -21,6 +21,7 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http.csrf(AbstractHttpConfigurer::disable);
+        http.cors(AbstractHttpConfigurer::disable);
         http.authorizeHttpRequests((req) -> req.anyRequest().authenticated());
         http.oauth2ResourceServer(t-> t.jwt(jwt -> jwt.jwtAuthenticationConverter(jwtAuthenticationConverter())));
         //http.oauth2Login(Customizer.withDefaults());
